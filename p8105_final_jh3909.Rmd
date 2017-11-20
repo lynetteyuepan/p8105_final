@@ -1,0 +1,24 @@
+---
+title: "p8105_final_jh3909"
+author: "Jingxuan He"
+date: "November 20, 2017"
+output: html_document
+---
+
+```{r packages}
+library(dplyr)
+```
+
+```{r data_prepare, include=FALSE}
+movie = read.csv("IMDB-Movie-Data.csv")
+
+boxoffice = NULL
+
+for (i in 2006:2016) {
+  year_boxoffice = 
+  
+  boxoffice = bind_rows(boxoffice, year_boxoffice)  
+}
+
+
+```
