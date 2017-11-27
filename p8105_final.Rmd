@@ -21,7 +21,7 @@ movie = read.csv("IMDB-Movie-Data.csv")
 # read boxoffice data from internet
 url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr="
 
-# create url strings for 2006 - 2016 boxoffice data
+# create url strings for 2006 - 2016 boxoffice data; only include movies with top 100 total gross in each year. 
 urls = str_c(url_base, 2006:2016, "&sort=gross&order=DESC&p=.htm")
 output = vector("list", 11)
 
@@ -29,7 +29,7 @@ output = vector("list", 11)
 boxoffice = NULL
 for (i in 1:11) {
 
-output[[i]] = read_html(urls[[1]])
+output[[i]] = read_html(urls[[i]])
 
 output[[i]] %>% 
 html_nodes(css = "table")
@@ -54,3 +54,19 @@ boxoffice = bind_rows(boxoffice, box_office_year)
 }
 ```
 
+## For box office, can review score/ budget/type/actor/director be the indicator?
+
+### Is there a linear relationship between total gross and review score?
+```{r}
+total_gross_lm = function(indicator) {
+  lm(total ~ indicator, data = boxoffice)
+}
+
+movie_rename= movie %>% 
+  clean_names() %>% 
+  rename("movie_title" = "title")
+  
+movie_total_gross_with_review = left_join(movie_rename, boxoffice, by=c("movie_title", "year"))
+
+
+```
