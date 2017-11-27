@@ -4,5 +4,53 @@ author: "Lynette Pan"
 date: "11/20/2017"
 output: html_document
 ---
+```{r packages}
+library(dplyr)
+library(tidyverse)
+library(httr)
+library(rvest)
+library(janitor)
+library(stringr)
+```
 
+# Prepare datasets
+```{r data_prepare, include=FALSE}
+# read IMDB data from Kaggle
+movie = read.csv("IMDB-Movie-Data.csv")
+
+# read boxoffice data from internet
+url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr"
+
+# create url strings for 2006 - 2016 boxoffice data
+urls = str_c(url_base, 2006:2016, "&sort=gross&order=DESC&p=.htm")
+output = vector("list", 11)
+
+# create for loop to generate the 2006 - 2016 boxoffice dataframe
+boxoffice = NULL
+for (i in 1:11) {
+
+output[[i]] = read_html(urls[[1]])
+
+output[[i]] %>% 
+html_nodes(css = "table")
+
+box_office_year = (output[[i]] %>% html_nodes(css = "table"))[[7]] %>%
+  html_table(fill = TRUE) 
+  
+colnames(box_office_year) = box_office_year[1,]
+colnames(box_office_year)[2] = "movie_title"
+colnames(box_office_year)[3] = "studio"
+colnames(box_office_year)[4] = "total_gross"
+colnames(box_office_year)[5] = "theaters"
+colnames(box_office_year)[6] = "opening"
+colnames(box_office_year)[7] = "theaters_opening"  
+
+box_office_year = box_office_year %>% 
+  select(movie_title, studio, total_gross, opening) %>% 
+  .[3:102,] %>%
+  mutate(year = 2005 + i)
+    
+boxoffice = bind_rows(boxoffice, box_office_year)  
+}
+```
 
