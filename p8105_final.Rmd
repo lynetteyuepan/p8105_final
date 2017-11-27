@@ -5,11 +5,4 @@ date: "11/20/2017"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-movie = read.csv("IMDB-Movie-Data.csv")
-
-
-
-
-```
 

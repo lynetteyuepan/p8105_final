@@ -1,0 +1,41 @@
+---
+title: "p8105_final_jh3909"
+author: "Jingxuan He"
+date: "November 20, 2017"
+output: html_document
+---
+
+```{r packages}
+library(dplyr)
+library(tidyverse)
+library(httr)
+library(rvest)
+library(janitor)
+```
+
+```{r data_prepare, include=FALSE}
+movie = read.csv("IMDB-Movie-Data.csv")
+
+boxoffice = NULL
+
+for (i in 2006:2016) {
+
+    
+  boxoffice = bind_rows(boxoffice, year_boxoffice)  
+}
+
+url = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr=2014&sort=gross&order=DESC&p=.htm"
+gross_movie = read_html(url)
+
+gross_movie %>% 
+html_nodes(css = "table")
+
+gross_movie_year = (gross_movie %>% html_nodes(css = "table"))[[7]] %>%
+  html_table(fill = TRUE, header = TRUE) %>%
+  clean_names() %>%
+  rename(studio = studio_function_mojodrop1_var_number_document_mojodropdown1_mojolinks1_selectedindex_location_href_document_mojodropdown1_mojolinks1_options_number_value_filter10f5_2a23a24abk_abr_adadcaefafampl_anch_apd_cargo_artmab360bbfrbcmgbgpbipbvbwpcbscdgm_cecf_srcfilmscgldcjclclscohencpcrnthda_defadistrib_dladrdrft_elev_eoneerosfb_part_fdeskfipfmfocusfoxfoxsfpefrfreefrunftpgathrgflgkgold_grav_hann_htricar_icirifcindic_jan_jsckekfklkslevellg_slgflong_shotlsmagn_mboxmmmnemont_mtuckmven_ansoaeogporch_orfosci_outsp4pala_par_pdfpfpphppfproudpurd_quadratt_rela_relbig_rialtoriotrmrmertwcrvls_imasab_sabansal_scre_sdseseasfisgemshout_shrts_smsonyspa_spcsspssrstrandsvtfatfctorgtrib_tristriuttwtvcuni_utmwutvvari_vevelv_vita_vpdw_dim_wbwb_nl_wein_wfwgusawowfxlyashzeit_zipp_all,
+         boxoffice = filter10f5_2a23a24abk_abr_adadcaefafampl_anch_apd_cargo_artmab360bbfrbcmgbgpbipbvbwpcbscdgm_cecf_srcfilmscgldcjclclscohencpcrnthda_defadistrib_dladrdrft_elev_eoneerosfb_part_fdeskfipfmfocusfoxfoxsfpefrfreefrunftpgathrgflgkgold_grav_hann_htricar_icirifcindic_jan_jsckekfklkslevellg_slgflong_shotlsmagn_mboxmmmnemont_mtuckmven_ansoaeogporch_orfosci_outsp4pala_par_pdfpfpphppfproudpurd_quadratt_rela_relbig_rialtoriotrmrmertwcrvls_imasab_sabansal_scre_sdseseasfisgemshout_shrts_smsonyspa_spcsspssrstrandsvtfatfctorgtrib_tristriuttwtvcuni_utmwutvvari_vevelv_vita_vpdw_dim_wbwb_nl_wein_wfwgusawowfxlyashzeit_zipp_all)%>%
+  
+
+
+```
