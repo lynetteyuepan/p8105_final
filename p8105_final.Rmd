@@ -19,7 +19,7 @@ library(stringr)
 movie = read.csv("IMDB-Movie-Data.csv")
 
 # read boxoffice data from internet
-url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr"
+url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr="
 
 # create url strings for 2006 - 2016 boxoffice data
 urls = str_c(url_base, 2006:2016, "&sort=gross&order=DESC&p=.htm")
