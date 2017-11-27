@@ -1,0 +1,13 @@
+name: "DS Homework 6"
+output_dir: "."
+navbar:
+  title: "Manqi's Website"
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html      
+   
+output:
+  html_document:
+    theme: journal
