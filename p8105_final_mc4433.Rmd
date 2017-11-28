@@ -87,15 +87,26 @@ movie_with_boxoffice = movie_with_boxoffice %>%
          open_gross = gsub(",", "", open_gross),
          open_gross = as.numeric(open_gross)) %>% 
   filter(!is.na(review_score)) %>% 
-  mutate(total_gross_millions = total_gross / 10^6) %>% 
-  select(-total_gross, -revenue_millions)
+  mutate(total_gross_millions = total_gross / 10^6,
+         open_gross_millions = open_gross / 10^6) %>% 
+  select(-total_gross, -revenue_millions, -open_gross)
 ```
 
 #develop relationship between open_gross and other possible indicators
 
-#
+##Is there a relationship between open gross and review score?
 ```{r}
+set.seed(1)
 
+# fit linear regression for total gross and review score
+lm(total_gross_millions ~ review_score, data = movie_total_gross_with_review_narm) %>% 
+  summary()
+
+# visualize the linear regression 
+movie_total_gross_with_review_narm %>% 
+  ggplot(aes(x= review_score, y = total_gross_millions)) +
+  geom_point(alpha = .5) +
+  stat_smooth(method = "lm") 
 ```
 
  
