@@ -11,6 +11,9 @@ library(httr)
 library(rvest)
 library(janitor)
 library(stringr)
+library(ggplot2)
+library(hexbin)
+library(plotly)
 ```
 
 # Prepare datasets
@@ -54,19 +57,97 @@ boxoffice = bind_rows(boxoffice, box_office_year)
 }
 ```
 
+
+# Lynette's code:
+
 ## For box office, can review score/ budget/type/actor/director be the indicator?
 
 ### Is there a linear relationship between total gross and review score?
 ```{r}
-total_gross_lm = function(indicator) {
-  lm(total ~ indicator, data = boxoffice)
-}
-
+set.seed(1)
+# renmae the movie_title in movie dataset in order to join two datasets
 movie_rename= movie %>% 
   clean_names() %>% 
-  rename("movie_title" = "title")
-  
-movie_total_gross_with_review = left_join(movie_rename, boxoffice, by=c("movie_title", "year"))
+  rename("movie_title" = "title",
+         "review_score" = "metascore")
 
+# joining two datasets; generate dataset with movie review and total gross
+movie_total_gross_with_review = left_join(movie_rename, boxoffice, by=c("movie_title", "year")) %>% 
+  filter(!is.na(total_gross) | !is.na(revenue_millions))
+
+# Replace NA values in total_gross with the revenue column in movie dataset
+total_gross_na = is.na(movie_total_gross_with_review$total_gross)
+
+movie_total_gross_with_review$total_gross[total_gross_na] =  movie_total_gross_with_review$revenue_millions[total_gross_na]*10^6
+
+# remove the dollar sign
+
+movie_total_gross_with_review$total_gross = as.numeric(gsub(c("\\$",","), "", movie_total_gross_with_review$total_gross))
+
+# remove rows with review scores is NA:
+movie_total_gross_with_review_narm = 
+  movie_total_gross_with_review %>% 
+  filter(!is.na(review_score)) %>% 
+  mutate(total_gross_millions = total_gross / 10^6) %>% 
+  select(-total_gross, -revenue_millions)
+
+
+# fit linear regression for total gross and review score
+lm(total_gross_millions ~ review_score, data = movie_total_gross_with_review_narm) %>% 
+  summary()
+
+# visualize the linear regression 
+movie_total_gross_with_review_narm %>% 
+  ggplot(aes(x= review_score, y = total_gross_millions)) +
+  geom_point(alpha = .5) +
+  stat_smooth(method = "lm") 
 
 ```
+
+
+### Is there a linear relationship between total gross and genre?
+```{r}
+set.seed(1)
+
+# fit linear regression for total gross and genre 
+lm(total_gross_millions ~ factor(genre), data = movie_total_gross_with_review_narm) %>% 
+  summary() 
+
+# select genres with total gross that is significant from others
+lm(total_gross_millions ~ factor(genre), data = movie_total_gross_with_review_narm) %>% 
+  summary()%>% 
+  broom::tidy() %>% 
+  filter(p.value<= 0.05)
+
+
+# visualize the relationship between total gross and 
+movie_total_gross_with_review_narm %>% 
+  plot_ly(., x = ~genre,  y = ~total_gross_millions, color = ~genre, type = "box")
+```
+
+### Is there a linear relationship between total gross and director?
+
+```{r}
+set.seed(1)
+# fit linear regression for total gross and genre
+  lm(total_gross_millions ~ factor(director), data = movie_total_gross_with_review_narm) %>% 
+  summary() %>% 
+  broom::tidy()
+
+# Too many directors; select those that are siginifcant different from others
+total_gross_director =
+  lm(total_gross_millions ~ factor(director), data = movie_total_gross_with_review_narm) %>% 
+  summary() %>% 
+  broom::tidy() %>% 
+  filter(p.value <= 0.05)
+
+total_gross_director[[1]]
+
+# visualize the linear regression 
+movie_total_gross_with_review_narm %>% 
+  mutate(director = as.character(paste0("factor(director)", director))) %>% 
+  filter(director == total_gross_director[[1]])
+  plot_ly(., x = ~director,  y = ~total_gross_millions, color = ~director, type = "box") 
+```
+
+
