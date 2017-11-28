@@ -12,28 +12,35 @@ knitr::opts_chunk$set(echo = TRUE)
 #The relationship between gross at the opening week and total gross?
 #The relationship between  gross at the opening week and director?
 
-```{r packages}
+```{r packages, include=FALSE}
 library(dplyr)
 library(tidyverse)
 library(httr)
 library(rvest)
 library(janitor)
 library(stringr)
+library(ggplot2)
+library(hexbin)
+library(plotly)
 ```
 
+# Prepare datasets
 ```{r data_prepare, include=FALSE}
+# read IMDB data from Kaggle
 movie = read.csv("IMDB-Movie-Data.csv")
 
-boxoffice = NULL
-
+# read boxoffice data from internet
 url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr="
-urls = str_c(url_base, 2006 : 2016, "&sort=gross&order=DESC&p=.htm")
 
+# create url strings for 2006 - 2016 boxoffice data; only include movies with top 100 total gross in each year. 
+urls = str_c(url_base, 2006:2016, "&sort=gross&order=DESC&p=.htm")
 output = vector("list", 11)
 
+# create for loop to generate the 2006 - 2016 boxoffice dataframe
+boxoffice = NULL
 for (i in 1:11) {
 
-output[[i]] = read_html(urls[[1]])
+output[[i]] = read_html(urls[[i]])
 
 output[[i]] %>% 
 html_nodes(css = "table")
@@ -56,8 +63,6 @@ box_office_year = box_office_year %>%
     
 boxoffice = bind_rows(boxoffice, box_office_year)  
 }
-
-
 ```
 
 ```{r combine and tidy dataset}
@@ -70,8 +75,7 @@ movie_rename= movie %>%
 
 # joining two datasets; tidy data set
 movie_with_boxoffice = left_join(movie_rename, boxoffice, by=c("movie_title", "year")) %>% 
-  rename("open_gross" = "opening") %>% 
-  filter(!is.na(total_gross) | !is.na(revenue_millions) | !is.na(open_gross)) 
+  rename("open_gross" = "opening")  
 
 # Replace NA values in total_gross with the revenue column in movie dataset
 total_gross_na = is.na(movie_with_boxoffice$total_gross)
@@ -86,27 +90,140 @@ movie_with_boxoffice = movie_with_boxoffice %>%
          open_gross = gsub("\\$", "", open_gross),
          open_gross = gsub(",", "", open_gross),
          open_gross = as.numeric(open_gross)) %>% 
-  filter(!is.na(review_score)) %>% 
   mutate(total_gross_millions = total_gross / 10^6,
          open_gross_millions = open_gross / 10^6) %>% 
-  select(-total_gross, -revenue_millions, -open_gross)
+  select(-total_gross, -revenue_millions, -open_gross) %>% 
+  separate(., actors, c("actor1","actor2", "actor3", "actor4"), sep=",") %>% 
+  separate(genre, into = c("genre1", "genre2", "genre3"), sep = ",")
 ```
 
 #develop relationship between open_gross and other possible indicators
+
+```{r the top 10 highest open-gross movie}
+
+movie_with_boxoffice %>%
+  arrange(desc(open_gross_millions)) %>% 
+  pull(movie_title)%>% 
+  head(10)
+```
+
 
 ##Is there a relationship between open gross and review score?
 ```{r}
 set.seed(1)
 
 # fit linear regression for total gross and review score
-lm(total_gross_millions ~ review_score, data = movie_total_gross_with_review_narm) %>% 
+lm(open_gross_millions ~ review_score, data = movie_with_boxoffice) %>% 
   summary()
 
 # visualize the linear regression 
-movie_total_gross_with_review_narm %>% 
-  ggplot(aes(x= review_score, y = total_gross_millions)) +
+movie_with_boxoffice %>% 
+  na.omit() %>% 
+  ggplot(aes(x= review_score, y = open_gross_millions)) +
   geom_point(alpha = .5) +
   stat_smooth(method = "lm") 
+
+movie_with_boxoffice %>% 
+  na.omit() %>% 
+  group_by(year) %>% 
+  ggplot(aes(x= review_score, y = open_gross_millions)) +
+  geom_point(alpha = .5) +
+  stat_smooth(method = "lm")+
+  facet_grid(. ~ year)
+
 ```
 
- 
+# Is there a relationship between open gross and genre?
+```{r}
+set.seed(1)
+
+# check if genre is a significant predictor
+anova(lm(open_gross_millions ~ genre, data = movie_with_boxoffice))
+
+# fit linear regression for each genre
+lm(open_gross_millions ~ genre, data = movie_with_boxoffice) %>% 
+  summary()
+
+# visualize the relationship between total gross and 
+
+movie_with_boxoffice %>% 
+  plot_ly(., x = ~genre,  y = ~open_gross_millions, color = ~genre, type = "box")
+
+movie_with_sepeartegenre = movie_with_boxoffice %>% 
+  separate(genre, into = c("genre1", "genre2", "genre3"), sep = ",") 
+
+movie_with_sepeartegenre %>%   
+  arrange(desc(open_gross_millions)) %>% 
+  pull(genre1) %>% 
+  head(10)
+
+movie_with_sepeartegenre %>%   
+  arrange(desc(open_gross_millions)) %>% 
+  pull(genre2) %>% 
+  head(10)
+
+movie_with_sepeartegenre %>%   
+  arrange(desc(open_gross_millions)) %>% 
+  pull(genre3) %>% 
+  head(10)
+
+#Therefore we just choose the top 5 genre to do exploration(shiny)
+movie_with_sepeartegenre %>% 
+  filter(genre1 == "Action") %>% 
+  plot_ly(., x = ~genre1,  y = ~open_gross_millions, color = ~genre2, type = "box")
+```
+
+### Is there a relationship between open gross and director?
+
+```{r}
+set.seed(1)
+
+# check if genre is a significant predictor
+anova(lm(open_gross_millions ~ director, data = movie_with_boxoffice))
+## significant
+
+# fit linear regression for each genre
+lm(open_gross_millions ~ director, data = movie_with_boxoffice) %>% 
+  summary()
+
+# visualize the relationship between total gross and 
+
+movie_with_boxoffice %>% 
+  plot_ly(x = ~director,  y = ~open_gross_millions, color = ~director, type = "box") %>% 
+  layout(showlegend = FALSE)
+
+movie_with_boxoffice %>% 
+  arrange(desc(open_gross_millions)) %>% 
+  pull(director) %>% 
+  head(10)
+
+```
+
+### Is there a relationship between open gross and actor?
+```{r}
+set.seed(1)
+
+# separate the actors in actor column into four columns; then use gather function in order to do the anova test.
+movie_with_boxoffice_actor_sep= 
+  movie_with_boxoffice %>%
+  separate(., actors, c("actor1","actor2", "actor3", "actor4"), sep=",") %>% 
+  gather(., key = "num_actor", value = "main_actors", actor1:actor4)
+
+# check if genre is a significant predictor
+anova(lm(open_gross_millions ~ main_actors, data = movie_with_boxoffice_actor_sep))
+## not significant
+
+
+# visualize the relationship between total gross and 
+
+movie_with_boxoffice_actor_sep %>% 
+  plot_ly(x = ~main_actors,  y = ~open_gross_millions, color = ~main_actors, type = "box") %>% 
+  layout(showlegend = FALSE)
+
+movie_with_boxoffice_actor_sep %>%
+  group_by(main_actors) %>% 
+  arrange(desc(open_gross_millions)) %>% 
+  head(10) %>% 
+  knitr::kable()
+  
+```

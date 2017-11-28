@@ -53,34 +53,3 @@ boxoffice = bind_rows(boxoffice, box_office_year)
 
 ```
 
-```{r combine and tidy dataset}
-set.seed(1)
-# renmae the movie_title in movie dataset in order to join two datasets
-movie_rename= movie %>% 
-  clean_names() %>% 
-  rename("movie_title" = "title",
-         "review_score" = "metascore")
-
-# joining two datasets; tidy data set
-movie_with_boxoffice = left_join(movie_rename, boxoffice, by=c("movie_title", "year")) %>% 
-  rename("open_gross" = "opening") %>% 
-  filter(!is.na(total_gross) | !is.na(revenue_millions) | !is.na(open_gross)) 
-
-# Replace NA values in total_gross with the revenue column in movie dataset
-total_gross_na = is.na(movie_with_boxoffice$total_gross)
-
-movie_with_boxoffice$total_gross[total_gross_na] =  movie_with_boxoffice$revenue_millions[total_gross_na]*10^6
-
-# eliminate $sign and "," of the total gross and open gross, remove rows with review scores is NA:
-movie_with_boxoffice = movie_with_boxoffice %>% 
-  mutate(total_gross = gsub("\\$", "", total_gross),
-         total_gross = gsub(",", "", total_gross),
-         total_gross = as.numeric(total_gross),
-         open_gross = gsub("\\$", "", open_gross),
-         open_gross = gsub(",", "", open_gross),
-         open_gross = as.numeric(open_gross)) %>% 
-  filter(!is.na(review_score)) %>% 
-  mutate(total_gross_millions = total_gross / 10^6,
-         open_gross_millions = open_gross / 10^6) %>% 
-  select(-total_gross, -revenue_millions, -open_gross)
-```
