@@ -4,7 +4,7 @@ author: "Lynette Pan"
 date: "11/20/2017"
 output: html_document
 ---
-```{r packages}
+```{r packages, include=FALSE}
 library(dplyr)
 library(tidyverse)
 library(httr)
@@ -57,15 +57,7 @@ boxoffice = bind_rows(boxoffice, box_office_year)
 }
 ```
 
-----------------------------------------------------------------------------------------------------------------------------
-
-# Lynette's code:
-
-## For box office, can review score/genre/actor/director be the indicator?
-
-### Is there a relationship between total gross and review score?
-```{r}
-set.seed(1)
+```{r comb_data}
 # renmae the movie_title in movie dataset in order to join two datasets
 movie_rename= movie %>% 
   clean_names() %>% 
@@ -91,6 +83,17 @@ movie_total_gross_with_review_narm =
   filter(!is.na(review_score)) %>% 
   mutate(total_gross_millions = total_gross / 10^6) %>% 
   select(-total_gross, -revenue_millions)
+```
+
+----------------------------------------------------------------------------------------------------------------------------
+
+# Lynette's code:
+
+## For box office, can review score/genre/actor/director be the indicator?
+
+### Is there a relationship between total gross and review score?
+```{r}
+set.seed(1)
 
 
 # fit linear regression for total gross and review score
@@ -120,8 +123,7 @@ lm(total_gross_millions ~ genre, data = movie_total_gross_with_review_narm) %>%
 # visualize the relationship between total gross and 
 
 movie_total_gross_with_review_narm %>% 
-  plot_ly(., x = ~genre,  y = ~total_gross_millions, color = ~genre, type = "box") %>% 
-  layout(xaxis = "Genre", yaxis = "Total gross in millions")
+  plot_ly(., x = ~genre,  y = ~total_gross_millions, color = ~genre, type = "box")
 ```
 
 ### Is there a relationship between total gross and director?
@@ -141,7 +143,7 @@ lm(total_gross_millions ~ director, data = movie_total_gross_with_review_narm) %
 
 movie_total_gross_with_review_narm %>% 
   plot_ly(x = ~director,  y = ~total_gross_millions, color = ~director, type = "box") %>% 
-  layout(showlegend = FALSE,xaxis = "Director names", yaxis = "Total gross in millions")
+  layout(showlegend = FALSE)
 
 ```
 
@@ -164,6 +166,6 @@ anova(lm(total_gross_millions ~ main_actors, data = total_gross_actor_sep))
 
 total_gross_actor_sep %>% 
   plot_ly(x = ~main_actors,  y = ~total_gross_millions, color = ~main_actors, type = "box") %>% 
-  layout(showlegend = FALSE,xaxis = "Actor names", yaxis = "Total gross in millions")
+  layout(showlegend = FALSE)
 ```
 
