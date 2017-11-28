@@ -57,12 +57,13 @@ boxoffice = bind_rows(boxoffice, box_office_year)
 }
 ```
 
+----------------------------------------------------------------------------------------------------------------------------
 
 # Lynette's code:
 
-## For box office, can review score/ budget/type/actor/director be the indicator?
+## For box office, can review score/genre/actor/director be the indicator?
 
-### Is there a linear relationship between total gross and review score?
+### Is there a relationship between total gross and review score?
 ```{r}
 set.seed(1)
 # renmae the movie_title in movie dataset in order to join two datasets
@@ -80,9 +81,9 @@ total_gross_na = is.na(movie_total_gross_with_review$total_gross)
 
 movie_total_gross_with_review$total_gross[total_gross_na] =  movie_total_gross_with_review$revenue_millions[total_gross_na]*10^6
 
-# remove the dollar sign
-
-movie_total_gross_with_review$total_gross = as.numeric(gsub(c("\\$",","), "", movie_total_gross_with_review$total_gross))
+# remove the dollar sign and commas in the total gross column and make it numeric:
+movie_total_gross_with_review$total_gross = gsub("\\$", "", movie_total_gross_with_review$total_gross)
+movie_total_gross_with_review$total_gross = as.numeric(gsub(",", "", movie_total_gross_with_review$total_gross))
 
 # remove rows with review scores is NA:
 movie_total_gross_with_review_narm = 
@@ -105,49 +106,64 @@ movie_total_gross_with_review_narm %>%
 ```
 
 
-### Is there a linear relationship between total gross and genre?
+### Is there a relationship between total gross and genre?
 ```{r}
 set.seed(1)
 
-# fit linear regression for total gross and genre 
-lm(total_gross_millions ~ factor(genre), data = movie_total_gross_with_review_narm) %>% 
-  summary() 
+# check if genre is a significant predictor
+anova(lm(total_gross_millions ~ genre, data = movie_total_gross_with_review_narm))
 
-# select genres with total gross that is significant from others
-lm(total_gross_millions ~ factor(genre), data = movie_total_gross_with_review_narm) %>% 
-  summary()%>% 
-  broom::tidy() %>% 
-  filter(p.value<= 0.05)
+# fit linear regression for each genre
+lm(total_gross_millions ~ genre, data = movie_total_gross_with_review_narm) %>% 
+  summary()
+
+# visualize the relationship between total gross and 
+
+movie_total_gross_with_review_narm %>% 
+  plot_ly(., x = ~genre,  y = ~total_gross_millions, color = ~genre, type = "box") %>% 
+  layout(xaxis = "Genre", yaxis = "Total gross in millions")
+```
+
+### Is there a relationship between total gross and director?
+
+```{r}
+set.seed(1)
+
+# check if genre is a significant predictor
+anova(lm(total_gross_millions ~ director, data = movie_total_gross_with_review_narm))
+## significant
+
+# fit linear regression for each genre
+lm(total_gross_millions ~ director, data = movie_total_gross_with_review_narm) %>% 
+  summary()
+
+# visualize the relationship between total gross and 
+
+movie_total_gross_with_review_narm %>% 
+  plot_ly(x = ~director,  y = ~total_gross_millions, color = ~director, type = "box") %>% 
+  layout(showlegend = FALSE,xaxis = "Director names", yaxis = "Total gross in millions")
+
+```
+
+### Is there a relationship between total gross and actor?
+```{r}
+set.seed(1)
+
+# separate the actors in actor column into four columns; then use gather function in order to do the anova test.
+total_gross_actor_sep= 
+  movie_total_gross_with_review_narm %>%
+  separate(., actors, c("actor1","actor2", "actor3", "actor4"), sep=",") %>% 
+  gather(., key = "num_actor", value = "main_actors", actor1:actor4)
+
+# check if genre is a significant predictor
+anova(lm(total_gross_millions ~ main_actors, data = total_gross_actor_sep))
+## not significant
 
 
 # visualize the relationship between total gross and 
-movie_total_gross_with_review_narm %>% 
-  plot_ly(., x = ~genre,  y = ~total_gross_millions, color = ~genre, type = "box")
+
+total_gross_actor_sep %>% 
+  plot_ly(x = ~main_actors,  y = ~total_gross_millions, color = ~main_actors, type = "box") %>% 
+  layout(showlegend = FALSE,xaxis = "Actor names", yaxis = "Total gross in millions")
 ```
-
-### Is there a linear relationship between total gross and director?
-
-```{r}
-set.seed(1)
-# fit linear regression for total gross and genre
-  lm(total_gross_millions ~ factor(director), data = movie_total_gross_with_review_narm) %>% 
-  summary() %>% 
-  broom::tidy()
-
-# Too many directors; select those that are siginifcant different from others
-total_gross_director =
-  lm(total_gross_millions ~ factor(director), data = movie_total_gross_with_review_narm) %>% 
-  summary() %>% 
-  broom::tidy() %>% 
-  filter(p.value <= 0.05)
-
-total_gross_director[[1]]
-
-# visualize the linear regression 
-movie_total_gross_with_review_narm %>% 
-  mutate(director = as.character(paste0("factor(director)", director))) %>% 
-  filter(director == total_gross_director[[1]])
-  plot_ly(., x = ~director,  y = ~total_gross_millions, color = ~director, type = "box") 
-```
-
 
