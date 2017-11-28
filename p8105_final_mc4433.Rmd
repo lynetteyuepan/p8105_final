@@ -1,0 +1,82 @@
+---
+title: "P8105_final_mc4433"
+author: "Manqi Cai"
+date: "11/28/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#The relationship between gross at the opening week and total gross?
+#The relationship between  gross at the opening week and director?
+
+```{r packages}
+library(dplyr)
+library(tidyverse)
+library(httr)
+library(rvest)
+library(janitor)
+library(stringr)
+```
+
+```{r data_prepare, include=FALSE}
+movie = read.csv("IMDB-Movie-Data.csv")
+
+boxoffice = NULL
+
+url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr="
+urls = str_c(url_base, 2006 : 2016, "&sort=gross&order=DESC&p=.htm")
+
+output = vector("list", 11)
+
+for (i in 1:11) {
+
+output[[i]] = read_html(urls[[1]])
+
+output[[i]] %>% 
+html_nodes(css = "table")
+
+box_office_year = (output[[i]] %>% html_nodes(css = "table"))[[7]] %>%
+  html_table(fill = TRUE) 
+  
+colnames(box_office_year) = box_office_year[1,]
+colnames(box_office_year)[2] = "movie_title"
+colnames(box_office_year)[3] = "studio"
+colnames(box_office_year)[4] = "total_gross"
+colnames(box_office_year)[5] = "theaters"
+colnames(box_office_year)[6] = "opening"
+colnames(box_office_year)[7] = "theaters_opening"  
+
+box_office_year = box_office_year %>% 
+  select(movie_title, studio, total_gross, opening) %>% 
+  .[3:102,] %>%
+  mutate(year = 2005 + i)
+    
+boxoffice = bind_rows(boxoffice, box_office_year)  
+}
+
+
+```
+
+```{r}
+set.seed(1)
+# renmae the movie_title in movie dataset in order to join two datasets
+movie_rename= movie %>% 
+  clean_names() %>% 
+  rename("movie_title" = "title",
+         "review_score" = "metascore")
+
+# joining two datasets; tidy data set
+movie_with_boxoffice = left_join(movie_rename, boxoffice, by=c("movie_title", "year")) %>% 
+  rename("open_gross" = "opening") %>% 
+  filter(!is.na(total_gross) | !is.na(revenue_millions) | !is.na(open_gross))  %>% 
+  mutate(total_gross = gsub("\\$", "", total_gross),
+         total_gross = as.numeric(total_gross),
+         open_gross = gsub("\\$", "", open_gross),
+         total_gross = as.numeric(open_gross))
+
+
+
+ 
