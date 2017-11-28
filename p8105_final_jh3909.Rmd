@@ -19,8 +19,8 @@ movie = read.csv("IMDB-Movie-Data.csv")
 
 boxoffice = NULL
 
-url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr"
-urls = str_c(url_base, 2006:2016, "&sort=gross&order=DESC&p=.htm")
+url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr="
+urls = str_c(url_base, 2006 : 2016, "&sort=gross&order=DESC&p=.htm")
 
 output = vector("list", 11)
 

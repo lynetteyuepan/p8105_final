@@ -11,6 +11,9 @@ library(httr)
 library(rvest)
 library(janitor)
 library(stringr)
+library(ggplot2)
+library(hexbin)
+library(plotly)
 ```
 
 # Prepare datasets
@@ -19,9 +22,9 @@ library(stringr)
 movie = read.csv("IMDB-Movie-Data.csv")
 
 # read boxoffice data from internet
-url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr"
+url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr="
 
-# create url strings for 2006 - 2016 boxoffice data
+# create url strings for 2006 - 2016 boxoffice data; only include movies with top 100 total gross in each year. 
 urls = str_c(url_base, 2006:2016, "&sort=gross&order=DESC&p=.htm")
 output = vector("list", 11)
 
@@ -29,7 +32,7 @@ output = vector("list", 11)
 boxoffice = NULL
 for (i in 1:11) {
 
-output[[i]] = read_html(urls[[1]])
+output[[i]] = read_html(urls[[i]])
 
 output[[i]] %>% 
 html_nodes(css = "table")
@@ -52,5 +55,115 @@ box_office_year = box_office_year %>%
     
 boxoffice = bind_rows(boxoffice, box_office_year)  
 }
+```
+
+----------------------------------------------------------------------------------------------------------------------------
+
+# Lynette's code:
+
+## For box office, can review score/genre/actor/director be the indicator?
+
+### Is there a relationship between total gross and review score?
+```{r}
+set.seed(1)
+# renmae the movie_title in movie dataset in order to join two datasets
+movie_rename= movie %>% 
+  clean_names() %>% 
+  rename("movie_title" = "title",
+         "review_score" = "metascore")
+
+# joining two datasets; generate dataset with movie review and total gross
+movie_total_gross_with_review = left_join(movie_rename, boxoffice, by=c("movie_title", "year")) %>% 
+  filter(!is.na(total_gross) | !is.na(revenue_millions))
+
+# Replace NA values in total_gross with the revenue column in movie dataset
+total_gross_na = is.na(movie_total_gross_with_review$total_gross)
+
+movie_total_gross_with_review$total_gross[total_gross_na] =  movie_total_gross_with_review$revenue_millions[total_gross_na]*10^6
+
+# remove the dollar sign and commas in the total gross column and make it numeric:
+movie_total_gross_with_review$total_gross = gsub("\\$", "", movie_total_gross_with_review$total_gross)
+movie_total_gross_with_review$total_gross = as.numeric(gsub(",", "", movie_total_gross_with_review$total_gross))
+
+# remove rows with review scores is NA:
+movie_total_gross_with_review_narm = 
+  movie_total_gross_with_review %>% 
+  filter(!is.na(review_score)) %>% 
+  mutate(total_gross_millions = total_gross / 10^6) %>% 
+  select(-total_gross, -revenue_millions)
+
+
+# fit linear regression for total gross and review score
+lm(total_gross_millions ~ review_score, data = movie_total_gross_with_review_narm) %>% 
+  summary()
+
+# visualize the linear regression 
+movie_total_gross_with_review_narm %>% 
+  ggplot(aes(x= review_score, y = total_gross_millions)) +
+  geom_point(alpha = .5) +
+  stat_smooth(method = "lm") 
+
+```
+
+
+### Is there a relationship between total gross and genre?
+```{r}
+set.seed(1)
+
+# check if genre is a significant predictor
+anova(lm(total_gross_millions ~ genre, data = movie_total_gross_with_review_narm))
+
+# fit linear regression for each genre
+lm(total_gross_millions ~ genre, data = movie_total_gross_with_review_narm) %>% 
+  summary()
+
+# visualize the relationship between total gross and 
+
+movie_total_gross_with_review_narm %>% 
+  plot_ly(., x = ~genre,  y = ~total_gross_millions, color = ~genre, type = "box") %>% 
+  layout(xaxis = "Genre", yaxis = "Total gross in millions")
+```
+
+### Is there a relationship between total gross and director?
+
+```{r}
+set.seed(1)
+
+# check if genre is a significant predictor
+anova(lm(total_gross_millions ~ director, data = movie_total_gross_with_review_narm))
+## significant
+
+# fit linear regression for each genre
+lm(total_gross_millions ~ director, data = movie_total_gross_with_review_narm) %>% 
+  summary()
+
+# visualize the relationship between total gross and 
+
+movie_total_gross_with_review_narm %>% 
+  plot_ly(x = ~director,  y = ~total_gross_millions, color = ~director, type = "box") %>% 
+  layout(showlegend = FALSE,xaxis = "Director names", yaxis = "Total gross in millions")
+
+```
+
+### Is there a relationship between total gross and actor?
+```{r}
+set.seed(1)
+
+# separate the actors in actor column into four columns; then use gather function in order to do the anova test.
+total_gross_actor_sep= 
+  movie_total_gross_with_review_narm %>%
+  separate(., actors, c("actor1","actor2", "actor3", "actor4"), sep=",") %>% 
+  gather(., key = "num_actor", value = "main_actors", actor1:actor4)
+
+# check if genre is a significant predictor
+anova(lm(total_gross_millions ~ main_actors, data = total_gross_actor_sep))
+## not significant
+
+
+# visualize the relationship between total gross and 
+
+total_gross_actor_sep %>% 
+  plot_ly(x = ~main_actors,  y = ~total_gross_millions, color = ~main_actors, type = "box") %>% 
+  layout(showlegend = FALSE,xaxis = "Actor names", yaxis = "Total gross in millions")
 ```
 
