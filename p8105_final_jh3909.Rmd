@@ -89,10 +89,12 @@ movie_with_boxoffice = movie_with_boxoffice %>%
          open_gross = gsub(",", "", open_gross),
          open_gross = as.numeric(open_gross)) %>% 
   mutate(total_gross_millions = total_gross / 10^6,
-         open_gross_millions = open_gross / 10^6) %>% 
+         open_gross_millions = open_gross / 10^6,
+         actors_sep = actors,
+         genre_sep = genre) %>% 
   select(-total_gross, -revenue_millions, -open_gross) %>% 
-  separate(., actors, c("actor1","actor2", "actor3", "actor4"), sep=",") %>% 
-  separate(genre, into = c("genre1", "genre2", "genre3"), sep = ",")
+  separate(., actors_sep, c("actor1","actor2", "actor3", "actor4"), sep=",") %>% 
+  separate(genre_sep, into = c("genre1", "genre2", "genre3"), sep = ",")
 
 
 ```
@@ -123,5 +125,57 @@ movie_with_review_narm %>%
 
 ### Can genere be the indicator of review scores?
 ```{r}
+set.seed(1)
 
+# check if genre is a significant predictor
+anova(lm(review_score ~ genre, data = movie_with_review_narm))
+
+# fit linear regression for each genre
+lm(review_score ~ genre, data = movie_with_review_narm) %>% 
+  summary()
+
+# visualize the relationship between total gross and 
+
+movie_with_review_narm %>% 
+  plot_ly(., x = ~genre,  y = ~review_score, color = ~genre, type = "box")
+```
+
+### Can director be the indicator of review scores?
+```{r}
+set.seed(1)
+
+# check if genre is a significant predictor
+anova(lm(review_score ~ director, data = movie_total_gross_with_review_narm))
+## significant
+
+# fit linear regression for each genre
+lm(review_score ~ director, data = movie_with_review_narm) %>% 
+  summary()
+
+# visualize the relationship between total gross and 
+
+movie_with_review_narm %>% 
+  plot_ly(x = ~director,  y = ~review_score, color = ~director, type = "box") %>% 
+  layout(showlegend = FALSE)
+```
+
+### Can actor be the indicator of review scores?
+```{r}
+set.seed(1)
+
+# separate the actors in actor column into four columns; then use gather function in order to do the anova test.
+total_gross_actor_sep= 
+  movie_with_review_narm %>%
+  gather(., key = "num_actor", value = "main_actors", actor1:actor4)
+
+# check if genre is a significant predictor
+anova(lm(review_score ~ main_actors, data = total_gross_actor_sep))
+## not significant
+
+
+# visualize the relationship between total gross and 
+
+total_gross_actor_sep %>% 
+  plot_ly(x = ~main_actors,  y = ~total_gross_millions, color = ~main_actors, type = "box") %>% 
+  layout(showlegend = FALSE)
 ```
