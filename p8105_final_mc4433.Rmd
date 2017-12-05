@@ -21,12 +21,8 @@ library(stringr)
 library(ggplot2)
 library(hexbin)
 library(plotly)
-<<<<<<< HEAD
 library(knitr)
-=======
 library(DT)
-
->>>>>>> e4baa1e93436cf1a44a16fe468217e409564ae4d
 ```
 
 # Prepare datasets
