@@ -1,5 +1,6 @@
 ---
-title: "final project_1"
+title: "final project"
+output: html_document
 ---
 
 ```{r packages}
@@ -16,6 +17,7 @@ library(rvest)
 library(janitor)
 library(haven)
 library(DT)
+library(plotly)
 ```
 
 # Prepare datasets
@@ -57,9 +59,7 @@ box_office_year = box_office_year %>%
     
 boxoffice = bind_rows(boxoffice, box_office_year)  
 }
-```
 
-```{r combine and tidy dataset}
 set.seed(1)
 # renmae the movie_title in movie dataset in order to join two datasets
 movie_rename= movie %>% 
@@ -85,164 +85,155 @@ movie_with_boxoffice = movie_with_boxoffice %>%
          open_gross = gsub(",", "", open_gross),
          open_gross = as.numeric(open_gross)) %>% 
   mutate(total_gross_millions = total_gross / 10^6,
-         open_gross_millions = open_gross / 10^6) %>% 
-  select(-total_gross, -revenue_millions, -open_gross) 
-  
-movie_with_boxoffice_sep = movie_with_boxoffice %>% 
-  separate(., actors, c("actor1","actor2", "actor3", "actor4"), sep=",") %>% 
-  separate(genre, into = c("genre1", "genre2", "genre3"), sep = ",")
+         open_gross_millions = open_gross / 10^6,
+         actors_sep = actors,
+         genre_sep = genre) %>% 
+  select(-total_gross, -revenue_millions, -open_gross) %>% 
+  separate(., actors_sep, c("actor1","actor2", "actor3", "actor4"), sep=",") %>% 
+  separate(genre_sep, into = c("genre1", "genre2", "genre3"), sep = ",")
 ```
-
 
 ```{r}
 ##Top 10 movies with best box-office 
 movie_with_boxoffice %>% 
-  group_by(movie_title, director) %>% 
-  summarize(box_movie = sum(total_gross_millions)) %>% 
+  group_by(movie_title) %>% 
+  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
   head(10) %>% 
-  knitr::kable()
-
-##Top 10 movies with best opening box-office 
-movie_with_boxoffice %>% 
-  group_by(movie_title, director) %>% 
-  summarize(box_movie = sum(open_gross_millions)) %>% 
-  arrange(desc(box_movie)) %>% 
-  head(10) %>% 
-  knitr::kable()
+  datatable()
 ```
 
 ```{r}
-##Director:  The top 10 ranked director who contributed most box-office
+##Director:  The top 10 ranked director with best box-office
 movie_with_boxoffice %>% 
   group_by(director) %>% 
-  summarize(box_movie = sum(total_gross_millions)) %>% 
+  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
   head(10) %>% 
-  knitr::kable()
-
-##Director:  The top 10 ranked director who contributed most opening box-office
-movie_with_boxoffice %>% 
-  group_by(director) %>% 
-  summarize(box_movie = sum(open_gross_millions)) %>% 
-  arrange(desc(box_movie)) %>% 
-  head(10) %>% 
-  knitr::kable()
+  datatable()
 ```
 
 ```{r}
-##Type: The top 10 ranked type of movies who contributed most box-office
+##Type: The top 10 ranked type of movies with best box-office
 movie_with_boxoffice %>% 
   mutate(genre = as.character(genre)) %>% 
   unnest_tokens(word,genre) %>% 
   mutate(genre = word) %>% 
   group_by(genre)%>%
-  summarize(box_movie = sum(total_gross_millions)) %>% 
+  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
+  filter(!genre=="fi") %>% 
+  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>%
   arrange(desc(box_movie)) %>% 
   head(10) %>% 
-  knitr::kable()
+  datatable()
 
-##Type: The top 10 ranked type of movies with best opening box-office
+##Donut charts represent genre 
 movie_with_boxoffice %>% 
   mutate(genre = as.character(genre)) %>% 
-  unnest_tokens(word,genre) %>% 
+  unnest_tokens(word, genre) %>% 
   mutate(genre = word) %>% 
-  group_by(genre)%>%
-  summarize(box_movie = sum(open_gross_millions)) %>% 
+  group_by(genre) %>%
+  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
+  filter(!genre=="fi") %>% 
+  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>% 
   arrange(desc(box_movie)) %>% 
-  head(10) %>% 
-  knitr::kable()
+  plot_ly(labels = ~genre, values = ~box_movie, textposition = 'inside',
+        textinfo = 'label+percent') %>%
+  add_pie(hole = 0.6) %>%
+  layout(title = "Donut charts using Plotly",  showlegend = FALSE,
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
+
+movie_with_boxoffice %>% 
+  mutate(genre = as.character(genre)) %>% 
+  tidytext::unnest_tokens(word, genre) %>% 
+  mutate(genre = word) %>% 
+  group_by(genre) %>%
+  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
+  filter(!genre=="fi") %>% 
+  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>% 
+  arrange(desc(box_movie)) %>% 
+  plot_ly(., x = ~genre,  y = ~box_movie, color = ~genre, type = "bar")
+
+##range 
 ```
 
 ```{r}
 ##Actor/Actress:  The top 10 ranked actor/actress with best box-office
-movie_total_gross_with_review_narm %>% 
-  separate(actors, into = c("remove", "actor"), sep = ",") %>% 
-  select(-remove) %>% 
-  group_by(actor) %>%
-  summarize(box_movie = sum(total_gross_millions)) %>% 
+movie_with_boxoffice %>% 
+  gather(key = actor, value = main_actor, actor1:actor4) %>% 
+  group_by(main_actor) %>%
+  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
   head(10) %>% 
-  knitr::kable()
-
-#####Actor/Actress:  The top 10 ranked actor/actress with best opening box-office
-movie_total_gross_with_review_narm %>% 
-  separate(actors, into = c("remove", "actor"), sep = ",") %>% 
-  select(-remove) %>% 
-  group_by(actor) %>%
-  summarize(box_movie = sum(total_gross_millions)) %>% 
-  arrange(desc(box_movie)) %>% 
-  head(10) %>% 
-  knitr::kable()
+  datatable()
 ```
 
 ```{r}
 ##Production company:  The top 10 ranked production company  with best box-office
-movie_total_gross_with_review_narm %>% 
+movie_with_boxoffice %>% 
   group_by(studio) %>%
   na.omit() %>% 
-  summarize(box_movie = sum(total_gross_millions)) %>% 
+  summarize(box_movie = sum(total_gross_millions,na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
   head(10) %>% 
-  knitr::kable()
+  datatable()
 ```
 
-sentiment analysis
-```{r}
-movie_analysis =  movie %>%  
-  clean_names() %>% 
-  mutate(inspection_num = row_number()) %>% 
-  mutate(description = as.character(description)) %>% 
-  select(title, description, inspection_num, rating)
+**Word Cloud for Movie Descriptions from 2006 to 2016**
+```{r echo = FALSE, fig.align='center', warning=FALSE, message=FALSE}
+# Install
+# install.packages("tm")  # for text mining
+# install.packages("SnowballC") # for text stemming
+# install.packages("wordcloud") # word-cloud generator 
+# install.packages("RColorBrewer") # color palettes
+# Load
+library("tm")
+library("SnowballC")
+library("wordcloud")
+library("RColorBrewer")
+library(tidyverse)
 
-inspection_words = movie_analysis %>% 
-  unnest_tokens(word, description)
-
-data(stop_words)
-
-inspection_words = anti_join(inspection_words, stop_words)
-```
-
-```{r}
-##most frequent word
-inspection_words %>% 
-  filter(rating >= "8.0") %>% 
-  count(word, sort = TRUE) %>% 
-  top_n(10)
-
-##low review
-inspection_words %>% 
-  filter(rating <= "3.0") %>% 
-  count(word, sort = TRUE) %>% 
-  top_n()
-```
+# create text files containing movie names in order to make a word cloud
+# movies_names = read_csv("IMDB-Movie-Data.csv") %>% 
+#   select(Title) %>% 
+#   write.table(., "movies_names.txt", sep="\t")
 
 
-```{r}
-bing_sentiments = get_sentiments("bing")
-
-inspection_sentiments = inspection_words %>% 
-  inner_join(., bing_sentiments) %>% 
-  count(inspection_num, sentiment) %>% 
-  spread(sentiment, n, fill = 0) %>% 
-  mutate(sentiment = positive - negative) %>% 
-  select(inspection_num, sentiment)
-
-inspection_sentiments = 
-  right_join(movie_analysis, inspection_sentiments, 
-             by = "inspection_num")
-
-inspection_sentiments %>% 
-  mutate(inspection_num = factor(inspection_num),
-    inspection_num = fct_reorder(inspection_num, sentiment)) %>% 
-  ggplot(aes(x = inspection_num, 
-             y = sentiment, fill = rating, color = rating)) + 
-  geom_bar(stat = "identity") + 
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()) +
-  scale_fill_viridis(discrete = FALSE) + 
-  scale_color_viridis(discrete = FALSE)
-```
+movie_with_boxoffice %>% 
+  select(description) %>% 
+  write.table(., "description.txt", sep="\t")
 
 
+text = as.character(readLines("description.txt"))
+docs = tm::Corpus(tm::VectorSource(text))
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+docs <- tm_map(docs, toSpace, "/")
+docs <- tm_map(docs, toSpace, "@")
+docs <- tm_map(docs, toSpace, "\\|")
+# Convert the text to lower case
+docs <- tm_map(docs, content_transformer(tolower))
+# Remove numbers
+docs <- tm_map(docs, removeNumbers)
+# Remove english common stopwords
+docs <- tm_map(docs, removeWords, stopwords("english"))
+# Remove your own stop word
+# specify your stopwords as a character vector
+docs <- tm_map(docs, removeWords, c("blabla1", "blabla2")) 
+# Remove punctuations
+docs <- tm_map(docs, removePunctuation)
+# Eliminate extra white spaces
+docs <- tm_map(docs, stripWhitespace)
+# Text stemming
+# docs <- tm_map(docs, stemDocument)
+dtm <- TermDocumentMatrix(docs)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+
+
+
+set.seed(1)
+wordcloud(words = d$word, freq = d$freq, min.freq = 1,
+          max.words=200, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
