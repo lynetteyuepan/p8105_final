@@ -18,6 +18,7 @@ library(ggplot2)
 library(hexbin)
 library(plotly)
 library(knitr)
+library(DT)
 ```
 
 # Prepare datasets
@@ -97,16 +98,9 @@ movie_with_boxoffice = movie_with_boxoffice %>%
 
 ```
 
-<<<<<<< HEAD
 
-<<<<<<< HEAD
-=======
-
-=======
 ----------------------------------------------------------------------------------------------------------------------------
   
->>>>>>> e4baa1e93436cf1a44a16fe468217e409564ae4d
->>>>>>> master
 # Jingxuan' s code:
   
 ## For review scores, can box office/genre/actor/director be indicators?
@@ -121,7 +115,9 @@ movie_with_review_narm =
 
 # fit linear regression for review scoreand total gross
 lm(review_score ~ total_gross_millions , data = movie_with_review_narm) %>% 
-  summary() 
+  summary() %>%
+  broom::tidy() %>%
+  datatable()
 ### significant
 
 movie_with_review_narm %>% 
@@ -140,7 +136,9 @@ movie_with_review_narm %>%
 set.seed(1)
 
 # check if genre is a significant predictor
-anova(lm(review_score ~ genre, data = movie_with_review_narm))
+anova(lm(review_score ~ genre, data = movie_with_review_narm)) %>%
+  broom::tidy() %>%
+  datatable()
 ### significant
 
 # fit linear regression for significant genre predictor
@@ -153,7 +151,8 @@ movie_with_review_narm %>%
   lm(review_score ~ genre, .) %>% 
   broom::tidy() %>%
   filter(p.value < 0.05) %>%
-  arrange(desc(estimate))
+  arrange(desc(estimate)) %>%
+  datatable()
 
 # visualize the relationship between total gross and 
 
@@ -171,19 +170,19 @@ movie_with_review_narm %>%
 ```{r}
 set.seed(1)
 
-<<<<<<< HEAD
 # check if director is a significant predictor
-=======
-# check if genre is a significant predictor
->>>>>>> master
-anova(lm(review_score ~ director, data = movie_with_review_narm))
+
+anova(lm(review_score ~ director, data = movie_with_review_narm)) %>%
+  broom::tidy() %>%
+  datatable()
 ## significant
 
 # fit linear regression for significant director predictor
 lm(review_score ~ director, data = movie_with_review_narm) %>% 
   broom::tidy() %>%
   filter(p.value < 0.05) %>%
-  arrange(desc(estimate))
+  arrange(desc(estimate)) %>%
+  datatable()
 
 # visualize the relationship between total gross and 
 
@@ -204,14 +203,17 @@ review_score_actor_sep=
   gather(., key = "num_actor", value = "main_actors", actor1:actor4)
 
 # check if actor is a significant predictor
-anova(lm(review_score ~ main_actors, data = review_score_actor_sep))
+anova(lm(review_score ~ main_actors, data = review_score_actor_sep)) %>%
+  broom::tidy() %>%
+  datatable()
 ## significant
 
 # fit linear regression for significant director predictor
 lm(review_score ~ main_actors, data = review_score_actor_sep) %>% 
   broom::tidy() %>%
   filter(p.value < 0.05) %>%
-  arrange(desc(estimate))
+  arrange(desc(estimate)) %>%
+  datatable()
 
 # visualize the relationship between total gross and 
 
@@ -225,12 +227,17 @@ review_score_actor_sep %>%
 set.seed(1)
 
 # check if studio is a significant predictor
-anova(lm(review_score ~ studio, data = movie_with_review_narm))
+anova(lm(review_score ~ studio, data = movie_with_review_narm)) %>%
+  broom::tidy() %>%
+  datatable()
 ### significant
 
 # fit linear regression for significant genre predictor
 lm(review_score ~ studio, data = movie_with_review_narm) %>% 
-  broom::tidy() 
+  broom::tidy() %>%
+  filter(p.value < 0.05) %>%
+  arrange(desc(estimate)) %>%
+  datatable()
 
 # visualize the relationship between total gross and 
 
