@@ -1,9 +1,9 @@
 name: "DS Homework 6"
 output_dir: "."
 navbar:
-  title: "Manqi's Website"
+  title: "Exploration of North American Box-office Indicating Factors (2006-2016)"
   right:
-    - text: "Home"
+    - text: "Overview"
       href: index.html
     - text: "About"
       href: about.html      

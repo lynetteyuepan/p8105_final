@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Exploration of North American Box-office Indicating Factors (2006-2016)</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Exploration of North American Box-office Indicating Factors (2006-2016)</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Exploration of North American Box-office Indicating Factors (2006-2016)</h1>
+
+</div>
+
+
+<p><strong>Word Cloud for Movie Names from 2006 to 2016</strong><img src="Image/word_cloud_movie_names.png"></p>
+<ul>
+<li>This website contains the final project for <a href="http://jeffgoldsmith.com/DSI/index.html">Jeff Goldsmith’s Data Science I class</a> in the Department of Biostatistics at Columbia University.</li>
+</ul>
+<hr />
+<blockquote>
+<p>Group Members:</p>
+</blockquote>
+<ul>
+<li>Yue(Lynette) Pan (yp2463) 1</li>
+<li>Yixi Xu (yx2450) 2</li>
+<li>Manqi Cai (mc4433) 3</li>
+<li>Jingxuan He (jh3909) 4</li>
+</ul>
+<blockquote>
+<p>Overview of the project goals and motivation.:</p>
+</blockquote>
+<ul>
+<li>In this project, we intend to explore the indicating factors of the total gross, review scores and opening gross for movies that were released in North America from 2006 to 2016.</li>
+<li>Mainly, there are three outcomes that we are interested in including <strong>total gross, review scores (metacritic review score) and opening gross</strong> for each movie in North America that was released from 2006 to 2016.</li>
+<li>Specifically, our exploratory analysis is based upon the</li>
+</ul>
+<blockquote>
+<p>Motivation</p>
+</blockquote>
+<ul>
+<li>Our moviation is really intuitive and simple. Since our members are movie-lovers, we would like to know if there is any factors that could potential be significant predictor of the interested outcome.</li>
+</ul>
+<blockquote>
+<p>Initial questions and New Questions:</p>
+</blockquote>
+<ul>
+<li><p>At the beginning of our project, we intend to explore the relationship between review score , genre, actor, director and each of interested outcome, namely <strong>total gross, review scores (metacritic review score) and opening gross</strong>.</p></li>
+<li><p>As the project progressed, we found that some of factors may be a significant predictor, whereas different levels within that factor may not be statistically significant.</p></li>
+</ul>
+<blockquote>
+<p>Data</p>
+</blockquote>
+<ul>
+<li>Data Source:
+<ul>
+<li><a href="http://www.boxofficemojo.com/yearly/chart/?yr=2014&amp;view=releasedate&amp;view2=domestic&amp;sort=gross&amp;order=DESC&amp;&amp;p=.htm">Box office</a></li>
+<li><a href="https://www.kaggle.com/PromptCloudHQ/imdb-data">06-16 movie</a></li>
+<li><a href="https://www.kaggle.com/theacademy/academy-awards">The Academy Awards</a></li>
+</ul></li>
+<li>Scapring process &amp; cleaning:
+<ul>
+<li>Firstly, we use the 06-16 movie dataset from kaggle and scrape the box office data from a <a href="(http://www.boxofficemojo.com/yearly/chart/?yr=2014&amp;view=releasedate&amp;view2=domestic&amp;sort=gross&amp;order=DESC&amp;&amp;p=.htm)">online recourse</a>.</li>
+<li>For the cleaning of the scraped data, we wrote a function to loop through urls that contains box office data from 2006 to 2016. We extracted the data table and formated in the way that could be combined and joined with our dataset from kaggle.</li>
+</ul></li>
+</ul>
+<blockquote>
+<p>Exploratory analyasis:</p>
+</blockquote>
+<ul>
+<li>We make plots for:
+<ul>
+<li>top 10 ranked director with best box-officehe</li>
+<li>top 10 ranked type of movies with best box-office</li>
+<li>top 10 ranked actor/actress with best box-office</li>
+<li>top 10 ranked production company with best box-office</li>
+</ul></li>
+</ul>
+<blockquote>
+<p>Additional analysis:</p>
+</blockquote>
+<ul>
+<li><p>We use lm function and anova function to test if the factor that we are tested is a statistical significant predictor of the interested outcome.</p></li>
+<li><p>If the predictor is contious, we will fit a linear regression line to the data; if the predictor is categorical and contains many levels, we will use plotly to display the difference among the levels of the predictor with regard to the interested outcome.</p></li>
+</ul>
+<blockquote>
+<p>Discussion</p>
+</blockquote>
+<ul>
+<li>For the total gross,
+<ul>
+<li>There is a linear relationship between total gross (outcome) and review score (predictor).</li>
+<li>Director is a significant predictor of total gross.</li>
+<li>Actor is not a significant predictor of total gross.</li>
+</ul></li>
+</ul>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
