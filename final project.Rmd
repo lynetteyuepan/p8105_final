@@ -21,7 +21,7 @@ library(DT)
 # Prepare datasets
 ```{r data_prepare, include=FALSE}
 # read IMDB data from Kaggle
-movie = read.csv("IMDB-Movie-Data.csv")
+movie = read.csv("./data/IMDB-Movie-Data.csv")
 
 # read boxoffice data from internet
 url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr="
