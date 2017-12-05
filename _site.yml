@@ -8,13 +8,13 @@ navbar:
     - text: "Report"
       href: about.html
     - text: "Exploration and Visualization"
-      href: final project.html  
+      href: final_project_1.html  
     - text: "Total Gross"
       href: Total_gross.html    
     - text: "Review scores"
       href: p8105_final_jh3909.html  
     - text: "Opening gross"
-      href: P8105_final_mc4433    
+      href: P8105_final_mc4433.html 
    
 output:
   html_document:
