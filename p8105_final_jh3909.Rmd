@@ -23,7 +23,7 @@ library(knitr)
 # Prepare datasets
 ```{r data_prepare, include=FALSE}
 # read IMDB data from Kaggle
-movie = read.csv("IMDB-Movie-Data.csv")
+movie = read.csv("./data/IMDB-Movie-Data.csv")
 
 # read boxoffice data from internet
 url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr="
@@ -61,7 +61,7 @@ boxoffice = bind_rows(boxoffice, box_office_year)
 }
 ```
 
-```{r combine and tidy dataset}
+```{r}
 set.seed(1)
 # renmae the movie_title in movie dataset in order to join two datasets
 movie_rename= movie %>% 
@@ -97,8 +97,13 @@ movie_with_boxoffice = movie_with_boxoffice %>%
 
 ```
 
+<<<<<<< HEAD
+
+
+=======
 ----------------------------------------------------------------------------------------------------------------------------
   
+>>>>>>> e4baa1e93436cf1a44a16fe468217e409564ae4d
 # Jingxuan' s code:
   
 ## For review scores, can box office/genre/actor/director be indicators?

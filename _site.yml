@@ -5,14 +5,16 @@ navbar:
   right:
     - text: "Overview"
       href: index.html
+    - text: "Report"
+      href: about.html
     - text: "Exploration and Visualization"
       href: final project.html  
     - text: "Total Gross"
-      href: p8105_final.html    
+      href: Total_gross.html    
     - text: "Review scores"
       href: p8105_final_jh3909.html  
     - text: "Opening gross"
-      href: p8105_final_mc4433.html    
+      href: P8105_final_mc4433    
    
 output:
   html_document:
