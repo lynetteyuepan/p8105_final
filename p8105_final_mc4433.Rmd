@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #The relationship between  gross at the opening week and director?
 
 ```{r packages, include=FALSE}
+
 library(dplyr)
 library(tidyverse)
 library(httr)
@@ -92,11 +93,10 @@ movie_with_boxoffice = movie_with_boxoffice %>%
          open_gross = as.numeric(open_gross)) %>% 
   mutate(total_gross_millions = total_gross / 10^6,
          open_gross_millions = open_gross / 10^6,
-         actors_sep = actors,
-         genre_sep = genre) %>% 
+         actors_sep = actors) %>% 
   select(-total_gross, -revenue_millions, -open_gross) %>% 
-  separate(., actors_sep, c("actor1","actor2", "actor3", "actor4"), sep=",") %>% 
-  separate(genre_sep, into = c("genre1", "genre2", "genre3"), sep = ",")
+  separate(., actors_sep, c("actor1","actor2", "actor3", "actor4"), sep=",")
+
 
 ```
 
@@ -119,7 +119,7 @@ set.seed(1)
 lm(open_gross_millions ~ review_score, data = movie_with_boxoffice) %>% 
   summary() %>% 
   broom::tidy() %>% 
-  datatable()
+  DT::datatable()
 
 # visualize the linear regression 
 movie_with_boxoffice %>% 
@@ -134,7 +134,8 @@ movie_with_boxoffice %>%
   ggplot(aes(x= review_score, y = open_gross_millions)) +
   geom_point(alpha = .5) +
   stat_smooth(method = "lm")+
-  facet_grid(. ~ year)
+  facet_grid(. ~ year)+
+  theme(axis.text.x = element_text(angle = 90))
 
 ```
 
@@ -142,40 +143,49 @@ movie_with_boxoffice %>%
 ```{r}
 set.seed(1)
 
+movie_with_boxoffice_genre_sep = movie_with_boxoffice %>%
+  mutate(genre = as.character(genre)) %>% 
+  tidytext::unnest_tokens(word, genre) %>% 
+  mutate(genre = word) %>% 
+  filter(!genre=="fi") %>% 
+  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) 
+
 # check if genre is a significant predictor
-anova(lm(open_gross_millions ~ genre, data = movie_with_boxoffice))
+anova(lm(open_gross_millions ~ genre, data = movie_with_boxoffice_genre_sep))
 
 # fit linear regression for each genre
-lm(open_gross_millions ~ genre, data = movie_with_boxoffice) %>% 
+lm(open_gross_millions ~ genre, data = movie_with_boxoffice_genre_sep) %>% 
   summary() %>% 
   broom::tidy() %>% 
+  filter(p.value < 0.05) %>% 
   datatable()
 
-# visualize the relationship between total gross and 
-
-movie_with_boxoffice %>% 
-  plot_ly(., x = ~genre,  y = ~open_gross_millions, color = ~genre, type = "box")
-
-
-movie_with_boxoffice %>%   
+movie_with_boxoffice_genre_sep %>%   
   arrange(desc(open_gross_millions)) %>% 
-  pull(genre1) %>% 
+  pull(genre) %>% 
   head(10)
 
-movie_with_boxoffice %>%   
-  arrange(desc(open_gross_millions)) %>% 
-  pull(genre2) %>% 
-  head(10)
+  
+movie_with_boxoffice_genre_sep %>% 
+plot_ly(., x = ~genre,  y = ~open_gross_millions, color = ~genre, type = "box")
 
-movie_with_boxoffice %>%   
-  arrange(desc(open_gross_millions)) %>% 
-  pull(genre3) %>% 
-  head(10)
 
-#Therefore we just choose the top 5 genre to do exploration(shiny)
-movie_with_boxoffice %>% 
-  filter(genre1 == "Action") %>% 
-  plot_ly(., x = ~genre1,  y = ~open_gross_millions, color = ~genre2, type = "box")
+colors <- c('rgb(211,94,96)', 'rgb(128,133,133)', 'rgb(144,103,167)', 'rgb(171,104,87)', 'rgb(114,147,203)')
+
+plot_ly(movie_with_boxoffice_genre_sep, labels = ~genre, values = ~open_gross_millions, type = 'pie',
+        textposition = 'inside',
+        textinfo = 'label+percent',
+        insidetextfont = list(color = '#FFFFFF'),
+        hoverinfo = 'text',
+        text = ~paste('$', open_gross_millions, ' millions'),
+        marker = list(colors = colors,
+                      line = list(color = '#FFFFFF', width = 1)),
+                      #The 'pull' attribute can also be used to create space between the sectors
+        showlegend = FALSE) %>%
+  layout(title = 'United States Personal Expenditures by Categories in 1960',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
 ```
 
 ### Is there a relationship between open gross and director?
@@ -183,15 +193,16 @@ movie_with_boxoffice %>%
 ```{r}
 set.seed(1)
 
-# check if genre is a significant predictor
+# check if director is a significant predictor
 anova(lm(open_gross_millions ~ director, data = movie_with_boxoffice))
 ## significant
 
-# fit linear regression for each genre
+# fit linear regression for directors
 lm(open_gross_millions ~ director, data = movie_with_boxoffice) %>% 
   summary() %>% 
   broom::tidy() %>% 
-  datatable()
+  filter(p.value < 0.5) %>% 
+  DT::datatable() 
 
 # visualize the relationship between total gross and 
 
