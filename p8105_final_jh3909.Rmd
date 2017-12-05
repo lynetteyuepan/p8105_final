@@ -98,11 +98,11 @@ movie_with_boxoffice = movie_with_boxoffice %>%
 ```
 
 ----------------------------------------------------------------------------------------------------------------------------
-
+  
 # Jingxuan' s code:
-
+  
 ## For review scores, can box office/genre/actor/director be indicators?
-
+  
 ### Can box office be the indicator of review scores?
 ```{r}
 set.seed(1)
@@ -114,6 +114,7 @@ movie_with_review_narm =
 # fit linear regression for review scoreand total gross
 lm(review_score ~ total_gross_millions , data = movie_with_review_narm) %>% 
   summary() 
+### significant
 
 movie_with_review_narm %>% 
   ggplot(aes(x= total_gross_millions, y = review_score)) +
@@ -121,16 +122,30 @@ movie_with_review_narm %>%
   stat_smooth(method = "lm") 
 ```
 
+**Comment:**
+
+* We can see that the positive association between review scores and boxoffice is significant. With every million increase in boxoffice, the expected review score will increase by 0.023 on average.
+
+
 ### Can genere be the indicator of review scores?
 ```{r}
 set.seed(1)
 
 # check if genre is a significant predictor
 anova(lm(review_score ~ genre, data = movie_with_review_narm))
+### significant
 
-# fit linear regression for each genre
-lm(review_score ~ genre, data = movie_with_review_narm) %>% 
-  summary()
+# fit linear regression for significant genre predictor
+movie_with_review_narm %>%
+  mutate(genre = as.character(genre)) %>% 
+  tidytext::unnest_tokens(word, genre) %>% 
+  mutate(genre = word) %>% 
+  filter(!genre=="fi") %>% 
+  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>%
+  lm(review_score ~ genre, .) %>% 
+  broom::tidy() %>%
+  filter(p.value < 0.05) %>%
+  arrange(desc(estimate))
 
 # visualize the relationship between total gross and 
 
@@ -138,17 +153,20 @@ movie_with_review_narm %>%
   plot_ly(., x = ~genre,  y = ~review_score, color = ~genre, type = "box")
 ```
 
+
 ### Can director be the indicator of review scores?
 ```{r}
 set.seed(1)
 
 # check if genre is a significant predictor
-anova(lm(review_score ~ director, data = movie_total_gross_with_review_narm))
+anova(lm(review_score ~ director, data = movie_with_review_narm))
 ## significant
 
-# fit linear regression for each genre
+# fit linear regression for significant director predictor
 lm(review_score ~ director, data = movie_with_review_narm) %>% 
-  summary()
+  broom::tidy() %>%
+  filter(p.value < 0.05) %>%
+  arrange(desc(estimate))
 
 # visualize the relationship between total gross and 
 
@@ -157,23 +175,43 @@ movie_with_review_narm %>%
   layout(showlegend = FALSE)
 ```
 
+**Fun Finding! :**
+
 ### Can actor be the indicator of review scores?
 ```{r}
 set.seed(1)
 
 # separate the actors in actor column into four columns; then use gather function in order to do the anova test.
-total_gross_actor_sep= 
+review_score_actor_sep= 
   movie_with_review_narm %>%
   gather(., key = "num_actor", value = "main_actors", actor1:actor4)
 
-# check if genre is a significant predictor
-anova(lm(review_score ~ main_actors, data = total_gross_actor_sep))
-## not significant
+# check if actor is a significant predictor
+anova(lm(review_score ~ main_actors, data = review_score_actor_sep))
+## significant
 
 
 # visualize the relationship between total gross and 
 
-total_gross_actor_sep %>% 
-  plot_ly(x = ~main_actors,  y = ~total_gross_millions, color = ~main_actors, type = "box") %>% 
+review_score_actor_sep %>% 
+  plot_ly(x = ~main_actors,  y = ~review_score, color = ~main_actors, type = "box") %>% 
   layout(showlegend = FALSE)
+```
+
+### Can studio be the indicator of review scores?
+```{r}
+set.seed(1)
+
+# check if studio is a significant predictor
+anova(lm(review_score ~ studio, data = movie_with_review_narm))
+### significant
+
+# fit linear regression for significant genre predictor
+lm(review_score ~ studio, data = movie_with_review_narm) %>% 
+  broom::tidy() 
+
+# visualize the relationship between total gross and 
+
+movie_with_review_narm %>% 
+  plot_ly(., x = ~genre,  y = ~review_score, color = ~studio, type = "box")
 ```
