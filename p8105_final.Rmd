@@ -1,8 +1,5 @@
 ---
 title: "p8105_final"
-author: "Lynette Pan"
-date: "11/20/2017"
-output: html_document
 ---
 ```{r packages, include=FALSE}
 library(dplyr)
@@ -57,7 +54,7 @@ boxoffice = bind_rows(boxoffice, box_office_year)
 }
 ```
 
-```{r comb_data}
+```{r comb_data, include= FALSE}
 # renmae the movie_title in movie dataset in order to join two datasets
 movie_rename= movie %>% 
   clean_names() %>% 
@@ -92,7 +89,7 @@ movie_total_gross_with_review_narm =
 ## For box office, can review score/genre/actor/director be the indicator?
 
 ### Is there a relationship between total gross and review score?
-```{r}
+```{r, echo = FALSE, fig.align='center'}
 set.seed(1)
 
 
@@ -110,7 +107,7 @@ movie_total_gross_with_review_narm %>%
 
 
 ### Is there a relationship between total gross and genre?
-```{r}
+```{r, echo = FALSE, fig.align='center'}
 set.seed(1)
 
 # check if genre is a significant predictor
@@ -128,7 +125,7 @@ movie_total_gross_with_review_narm %>%
 
 ### Is there a relationship between total gross and director?
 
-```{r}
+```{r, echo = FALSE, fig.align='center'}
 set.seed(1)
 
 # check if genre is a significant predictor
@@ -148,7 +145,7 @@ movie_total_gross_with_review_narm %>%
 ```
 
 ### Is there a relationship between total gross and actor?
-```{r}
+```{r, echo = FALSE, fig.align='center'}
 set.seed(1)
 
 # separate the actors in actor column into four columns; then use gather function in order to do the anova test.

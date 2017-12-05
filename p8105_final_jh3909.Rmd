@@ -1,8 +1,6 @@
 ---
 title: "p8105_final_jh3909"
-author: "Jingxuan He"
-date: "November 20, 2017"
-output: html_document
+
 ---
 
 ```{r setup, include=FALSE}

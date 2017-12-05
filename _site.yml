@@ -1,13 +1,19 @@
-name: "DS Homework 6"
+name: "p8105_final_project"
 output_dir: "."
 navbar:
   title: "Exploration of North American Box-office Indicating Factors (2006-2016)"
   right:
     - text: "Overview"
       href: index.html
-    - text: "About"
-      href: about.html      
+    - text: "Exploration and Visualization"
+      href: final project.html  
+    - text: "Total Gross"
+      href: p8105_final.html    
+    - text: "Review scores"
+      href: p8105_final_jh3909.html  
+    - text: "Opening gross"
+      href: p8105_final_mc4433.html    
    
 output:
   html_document:
-    theme: journal
+    theme: flatly

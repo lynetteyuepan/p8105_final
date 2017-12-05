@@ -1,8 +1,6 @@
 ---
 title: "P8105_final_mc4433"
-author: "Manqi Cai"
-date: "11/28/2017"
-output: html_document
+
 ---
 
 ```{r setup, include=FALSE}
