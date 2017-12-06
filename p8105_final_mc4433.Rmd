@@ -1,6 +1,10 @@
 ---
 title: "P8105_final_mc4433"
-
+author: "Manqi Cai"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -21,12 +25,9 @@ library(stringr)
 library(ggplot2)
 library(hexbin)
 library(plotly)
-<<<<<<< HEAD
 library(knitr)
-=======
 library(DT)
 
->>>>>>> e4baa1e93436cf1a44a16fe468217e409564ae4d
 ```
 
 # Prepare datasets
