@@ -1,9 +1,13 @@
 ---
 title: "final project"
-output: html_document
+output: 
+     html_document:
+        code_folding: hide
+        toc: true
+        toc_float: true
 ---
 
-```{r results='hide', message=FALSE, warning=FALSE,echo=FALSE}
+```{r include=FALSE, warning=FALSE}
 library(dplyr)
 library(tidyverse)
 library(httr)
@@ -20,7 +24,7 @@ library(DT)
 library(plotly)
 ```
 
-```{r data_prepare, include=FALSE,warning=FALSE,echo=FALSE}
+```{r data_prepare, warning=FALSE}
 # read IMDB data from Kaggle
 movie = read.csv("./data/IMDB-Movie-Data.csv")
 
@@ -93,9 +97,10 @@ movie_with_boxoffice = movie_with_boxoffice %>%
 ```
 
 
+
 ##Top ranked movies with best box-office 
 
-```{r warning=FALSE,echo=FALSE}
+```{r warning=FALSE}
 ##Top ranked movies with best box-office 
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
@@ -104,9 +109,11 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
+
+
 ##Top ranked movies with best review_score
 
-```{r warning=FALSE,echo=FALSE}
+```{r warning=FALSE}
 ##Top ranked movies with best review_score
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
@@ -115,9 +122,11 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
+
+
 ##Top ranked movies with best rating
 
-```{r warning=FALSE,echo=FALSE}
+```{r warning=FALSE}
 ##Top ranked movies with best rating
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
@@ -126,9 +135,11 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
+
+
 ##Top ranked movies with highest votes 
 
-```{r warning=FALSE,echo=FALSE}
+```{r warning=FALSE}
 ##Top ranked movies with highest votes 
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
@@ -137,9 +148,11 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
+
+
 ##Top ranked movies with longest runtime 
 
-```{r warning=FALSE,echo=FALSE}
+```{r warning=FALSE}
 ##Top ranked movies with longest runtime 
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
@@ -148,9 +161,11 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
+
+
 ##Distribution of movie genre
 
-```{r warning=FALSE,echo=FALSE}
+```{r warning=FALSE}
 ## Distribution of movie genre 
 ##Donut charts represent genre 
 movie_with_boxoffice %>% 
@@ -170,9 +185,11 @@ movie_with_boxoffice %>%
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
 ```
 
+
+
 ##Director:  The top ranked director with best box-office
 
-```{r warning=FALSE,echo=FALSE}
+```{r warning=FALSE}
 ##Director:  The top ranked director with best box-office
 movie_with_boxoffice %>% 
   group_by(director) %>% 
@@ -181,9 +198,11 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
+
+
 ##Type: The top ranked type of movies with best box-office
 
-```{r warning=FALSE,echo=FALSE}
+```{r warning=FALSE}
 ##Type: The top ranked type of movies with best box-office
 movie_with_boxoffice %>% 
   mutate(genre = as.character(genre)) %>% 
@@ -213,9 +232,11 @@ movie_with_boxoffice %>%
 ##range 
 ```
 
+
+
 ##Actor/Actress:  The top ranked actor/actress with best box-office
 
-```{r warning=FALSE,echo=FALSE}
+```{r warning=FALSE}
 ##Actor/Actress:  The top ranked actor/actress with best box-office
 movie_with_boxoffice %>% 
   gather(key = actor, value = main_actor, actor1:actor4) %>% 
@@ -225,9 +246,11 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
+
+
 ##Production company:  The top ranked production company  with best box-office
 
-```{r warning=FALSE,echo=FALSE}
+```{r warning=FALSE}
 ##Production company:  The top ranked production company  with best box-office
 movie_with_boxoffice %>% 
   group_by(studio) %>%
@@ -248,8 +271,9 @@ movie_with_boxoffice %>%
 
 ```
 
+
 **Word Cloud for Movie Descriptions from 2006 to 2016**
-```{r echo = FALSE, fig.align='center', warning=FALSE, message=FALSE,echo=FALSE}
+```{r echo = FALSE, fig.align='center', warning=FALSE, message=FALSE}
 # Install
 # install.packages("tm")  # for text mining
 # install.packages("SnowballC") # for text stemming
@@ -267,11 +291,9 @@ library(tidyverse)
 #   select(Title) %>% 
 #   write.table(., "movies_names.txt", sep="\t")
 
-
 movie_with_boxoffice %>% 
   select(description) %>% 
   write.table(., "description.txt", sep="\t")
-
 
 text = as.character(readLines("description.txt"))
 docs = tm::Corpus(tm::VectorSource(text))
