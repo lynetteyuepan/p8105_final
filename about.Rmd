@@ -90,11 +90,13 @@ Movies have become a big part of everyday life worldwide and their popularity gr
 
 
 
-* **Results of Multiple linear regression model:**  +  Finally, I fit a overall linear regression between open gross and review score, rating, total gross millions.The regression model is open_gross = 36.44 -0.23review_score - 3.49rating + 0.30total_gross_millions.
+* **Results of Multiple linear regression model:**  Finally, I fit a overall linear regression between open gross and review score, rating, total gross millions.The regression model is open_gross = 36.44 -0.23review_score - 3.49rating + 0.30total_gross_millions.
 
 
 
 ## Discussion:
+
+* When total gross is the interested outcome, review score, genre, director and production company are significantly predictors for the total gross, whereas actors/actresses are not significant predictors for the total gross. In the multiple linear regression model, review score, genre, director and production company are still statistically significant. This analysis provides the insight of how each potential explanatory factors relate to the total gross of movies, which can be further explore how to build the complex model to predict the total gross of movies.
 
 **Fun Finding! :**
 
