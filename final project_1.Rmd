@@ -1,5 +1,6 @@
 ---
 title: "final project"
+output: html_document
 ---
 
 ```{r packages}

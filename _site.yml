@@ -10,7 +10,7 @@ navbar:
     - text: "Exploration and Visualization"
       href: final_project_1.html  
     - text: "Total Gross"
-      href: Total_gross.html    
+      href: p8105_final.html    
     - text: "Review scores"
       href: p8105_final_jh3909.html  
     - text: "Opening gross"

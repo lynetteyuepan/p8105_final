@@ -1,5 +1,5 @@
 ---
-title: "Total_gross"
+title: "p8105_final"
 author: "Lynette Pan"
 output: 
   html_document:
