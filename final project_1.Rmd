@@ -105,7 +105,7 @@ movie_with_boxoffice %>%
   group_by(movie_title) %>% 
   summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 
 ##Top ranked movies with best review_score
@@ -116,7 +116,7 @@ movie_with_boxoffice %>%
   group_by(movie_title) %>% 
   select(movie_title, review_score) %>% 
   arrange(desc(review_score)) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 
 ##Top ranked movies with best rating
@@ -127,7 +127,7 @@ movie_with_boxoffice %>%
   group_by(movie_title) %>% 
   select(movie_title, rating) %>% 
   arrange(desc(rating)) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 
 ##Top ranked movies with highest votes 
@@ -138,7 +138,7 @@ movie_with_boxoffice %>%
   group_by(movie_title) %>% 
   select(movie_title, votes) %>% 
   arrange(desc(votes)) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 
 
@@ -151,7 +151,7 @@ movie_with_boxoffice %>%
   group_by(movie_title) %>% 
   select(movie_title, runtime_minutes) %>% 
   arrange(desc(runtime_minutes)) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 
 
@@ -164,7 +164,7 @@ movie_with_boxoffice %>%
   group_by(director) %>% 
   summarize(box_movie = sum(total_gross_millions, na.rm = TRUE), mean_review = mean(review_score, na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 
 ##Genre of movie
@@ -204,7 +204,7 @@ movie_with_boxoffice %>%
   filter(!genre=="fi") %>% 
   mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>%
   arrange(desc(box_movie)) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 
 movie_with_boxoffice %>% 
   mutate(genre = as.character(genre)) %>% 
@@ -232,7 +232,7 @@ movie_with_boxoffice %>%
   group_by(main_actor) %>%
   summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 
 
@@ -245,7 +245,7 @@ movie_with_boxoffice %>%
   na.omit() %>% 
   summarize(box_movie = sum(total_gross_millions,na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 
 movie_with_boxoffice %>% 
   group_by(studio) %>%
