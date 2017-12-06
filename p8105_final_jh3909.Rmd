@@ -3,15 +3,16 @@ title: "p8105_final_jh3909"
 author: "Jingxuan He"
 output: 
   html_document:
+    code_folding: hide
     toc: true
     toc_float: true
 ---
 
-```{r setup, include=FALSE, echo=FALSE, warning=FALSE}
+```{r setup, include=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r packages, include=FALSE, echo=FALSE, warning=FALSE}
+```{r packages, include=FALSE, warning=FALSE}
 library(dplyr)
 library(tidyverse)
 library(httr)
@@ -26,7 +27,7 @@ library(DT)
 ```
 
 
-```{r data_prepare, include=FALSE, echo=FALSE, warning=FALSE}
+```{r data_prepare, include=FALSE, warning=FALSE}
 # read IMDB data from Kaggle
 movie = read.csv("./data/IMDB-Movie-Data.csv")
 
@@ -66,7 +67,7 @@ boxoffice = bind_rows(boxoffice, box_office_year)
 }
 ```
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, warning=FALSE}
 set.seed(1)
 # renmae the movie_title in movie dataset in order to join two datasets
 movie_rename= movie %>% 
@@ -100,6 +101,9 @@ movie_with_boxoffice = movie_with_boxoffice %>%
   separate(genre_sep, into = c("genre1", "genre2", "genre3"), sep = ",")
 
 
+movie_with_review_narm = 
+  movie_with_boxoffice %>% 
+  filter(!is.na(review_score)) 
 ```
 
 
@@ -111,12 +115,9 @@ movie_with_boxoffice = movie_with_boxoffice %>%
 
   
 ### Can box office be the indicator of review scores?
-```{r, echo=FALSE, warning=FALSE}
+```{r, warning=FALSE}
 set.seed(1)
 
-movie_with_review_narm = 
-  movie_with_boxoffice %>% 
-  filter(!is.na(review_score)) 
 
 # fit linear regression for review scoreand total gross
 lm(review_score ~ total_gross_millions , data = movie_with_review_narm) %>% 
@@ -130,7 +131,7 @@ movie_with_review_narm %>%
   geom_point(alpha = .5) +
   stat_smooth(method = "lm") +
   labs(title = "Association between Review Score and Total Gross" ,x = "Total Gross(Million)", y = "Review Score") + 
-  theme(title = element_text(size = 20) ,text = element_text(size=15), axis.text.x = element_text(size = 15), legend.text = element_text(size = 15), legend.title = element_text(size = 15)) 
+  theme(title = element_text(size = 14) ,text = element_text(size=15), axis.text.x = element_text(size = 15), legend.text = element_text(size = 15), legend.title = element_text(size = 15)) 
 ```
 
 **Comment:**
@@ -139,10 +140,10 @@ movie_with_review_narm %>%
 
 
 ***
-
+***
 
 ### Can genere be the indicator of review scores?
-```{r, echo=FALSE, warning=FALSE}
+```{r, warning=FALSE}
 set.seed(1)
 
 # check if genre is a significant predictor
@@ -182,10 +183,10 @@ movie_with_review_narm %>%
 
 
 ***
-
+***
 
 ### Can director be the indicator of review scores?
-```{r, echo=FALSE, warning=FALSE}
+```{r, warning=FALSE}
 set.seed(1)
 
 # check if director is a significant predictor
@@ -216,10 +217,11 @@ movie_with_review_narm %>%
 
 
 ***
+***
 
 
 ### Can actor be the indicator of review scores?
-```{r, echo=FALSE, warning=FALSE}
+```{r, warning=FALSE}
 set.seed(1)
 
 # separate the actors in actor column into four columns; then use gather function in order to do the anova test.
@@ -253,10 +255,11 @@ review_score_actor_sep %>%
 
 
 ***
+***
 
 
 ### Can studio be the indicator of review scores?
-```{r, echo=FALSE, warning=FALSE}
+```{r,  warning=FALSE}
 set.seed(1)
 
 # check if studio is a significant predictor
