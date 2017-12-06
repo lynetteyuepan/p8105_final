@@ -1,6 +1,10 @@
 ---
 title: "p8105_final_jh3909"
-
+author: "Jingxuan He"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE, echo=FALSE, warning=FALSE}
@@ -21,7 +25,7 @@ library(knitr)
 library(DT)
 ```
 
-# Prepare datasets
+
 ```{r data_prepare, include=FALSE, echo=FALSE, warning=FALSE}
 # read IMDB data from Kaggle
 movie = read.csv("./data/IMDB-Movie-Data.csv")
@@ -99,12 +103,11 @@ movie_with_boxoffice = movie_with_boxoffice %>%
 ```
 
 
-----------------------------------------------------------------------------------------------------------------------------
-  
-# Jingxuan' s code:
 
-  
 ## For review scores, can box office/genre/actor/director be indicators?
+
+
+***
 
   
 ### Can box office be the indicator of review scores?
@@ -125,13 +128,17 @@ lm(review_score ~ total_gross_millions , data = movie_with_review_narm) %>%
 movie_with_review_narm %>% 
   ggplot(aes(x= total_gross_millions, y = review_score)) +
   geom_point(alpha = .5) +
-  stat_smooth(method = "lm") 
+  stat_smooth(method = "lm") +
+  labs(title = "Association between Review Score and Total Gross" ,x = "Total Gross(Million)", y = "Review Score") + 
+  theme(title = element_text(size = 20) ,text = element_text(size=15), axis.text.x = element_text(size = 15), legend.text = element_text(size = 15), legend.title = element_text(size = 15)) 
 ```
 
 **Comment:**
 
 * We can see that the positive association between review scores and boxoffice is significant. With every million increase in boxoffice, the expected review score will increase by 0.023 on average.
 
+
+***
 
 
 ### Can genere be the indicator of review scores?
@@ -165,9 +172,16 @@ movie_with_review_narm %>%
   mutate(genre = word) %>% 
   filter(!genre=="fi") %>% 
   mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>% 
-  plot_ly(., x = ~genre,  y = ~review_score, color = ~genre, type = "box")
+  plot_ly(., x = ~genre,  y = ~review_score, color = ~genre, type = "box") %>% 
+  layout(xaxis = list(title = ""))
 ```
 
+**Comment:**
+
+*  The positive association between review scores and genre is significant. There are 12 types of genres are significant predictor for review score. Genres with top three high estimate of review scores are history, animation and biography.
+
+
+***
 
 
 ### Can director be the indicator of review scores?
@@ -199,6 +213,9 @@ movie_with_review_narm %>%
 
 *  Directors with top three high review scores are Barry Jenkins, Kenneth Lonergan and Todd Haynes. They directed Moonlight, Manchester by the Sea and Carol respectively, which are all movies with good reputation and been nominated by Oscar. It's not hard to think they have high review score! :)
 
+
+
+***
 
 
 ### Can actor be the indicator of review scores?
@@ -234,6 +251,8 @@ review_score_actor_sep %>%
 
 * Actors with top review scores mostly participated in good reputation movies like Boyhood, Moonlight. However, some of actors only have one movie in dataset, so that they might not be a accurate predictor for the review scores.
 
+
+***
 
 
 ### Can studio be the indicator of review scores?
