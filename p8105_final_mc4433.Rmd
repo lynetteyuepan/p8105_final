@@ -114,7 +114,7 @@ movie_with_boxoffice %>%
   arrange(desc(open_gross_millions)) %>% 
   dplyr::select(movie_title, open_gross_millions) %>% 
   head(10) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 From the table above, we can see the top 10 movies with the 10 best opening gross, with highest the Jurassic World about 209 millions. Interestingly, the top 2 movies with best opening gross both released in the year 2015. The following 2 are released in the year 2016. The director Nolan has two movies with best 10 opening gross, both are batman. These gave me sense that 6 movies in the top 10 are superhero movies, 2 are hunger game series, 1 is Pirates of the Caribbean series. Therefore, it seems that the movies with highest opening gross are those popcorn series movies.
 
@@ -147,7 +147,7 @@ set.seed(1)
 lm(open_gross_millions ~ review_score, data = movie_with_boxoffice) %>% 
   summary() %>% 
   broom::tidy() %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 
 qt(0.975, df=998)
 
@@ -161,7 +161,7 @@ movie_with_boxoffice %>%
   arrange(desc(review_score)) %>% 
   dplyr::select(movie_title, review_score, open_gross_millions) %>% 
   head(10) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 It seems that none of the top 10 review score movie appears in the top 10 opening gross movies.
 So will the worst 10 review score movies contain top 10 opening gross movies?
@@ -171,7 +171,7 @@ movie_with_boxoffice %>%
   arrange(review_score) %>% 
   dplyr::select(movie_title, review_score, open_gross_millions) %>% 
   head(10) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 Luckily, the worst 10 review score don't contain the top 10 opening gross movies.
 
@@ -214,7 +214,7 @@ opengross_rating_lm <- lm(open_gross_millions ~ rating, data = movie_with_boxoff
 opengross_rating_lm %>% 
   summary() %>% 
   broom::tidy() %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 
 qt(0.975, df=998)
 
@@ -227,7 +227,7 @@ stu_res<-rstandard(opengross_rating_lm)
 outliers_y<-stu_res[abs(stu_res)>2.5]
 outliers_y %>% 
   as.tibble() %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 
 ```
 There seems to be 10 outliers in y.
@@ -240,7 +240,7 @@ movie_with_boxoffice %>%
   arrange(desc(rating)) %>% 
   dplyr::select(movie_title, rating, open_gross_millions) %>% 
   head(10) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 The two sets of Dark Knites appear again, and they are both directed by Christopher Nolan. He is indeed a good director.
 
@@ -251,7 +251,7 @@ movie_with_boxoffice %>%
   arrange(rating) %>% 
   dplyr::select(movie_title, rating, open_gross_millions) %>% 
   head(10) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 Luckily, the worst 10 rating don't contain the top 10 opening gross movies.
 
@@ -304,7 +304,7 @@ lm(open_gross_millions ~ genre, data = movie_with_boxoffice_genre_sep) %>%
   summary() %>% 
   broom::tidy() %>% 
   filter(p.value < 0.05) %>% 
-  datatable()
+  datatable(class = 'cell-border stripe')
 ```
 I choose the p.valur < 0.05 to find the significant genre for predicting open-gross.
 
@@ -366,7 +366,7 @@ lm(open_gross_millions ~ director, data = movie_with_boxoffice) %>%
   summary() %>% 
   broom::tidy() %>% 
   filter(p.value < 0.5) %>% 
-  DT::datatable() 
+  DT::datatable(class = 'cell-border stripe') 
 ```
 
 ```{r, warning=FALSE}
@@ -455,7 +455,7 @@ From the scatterplot we can clearly see that, there seems to be a strong linear 
 lm(open_gross_millions ~ total_gross_millions, data = movie_with_boxoffice) %>% 
   summary() %>% 
   broom::tidy() %>% 
-  DT::datatable() 
+  DT::datatable(class = 'cell-border stripe') 
 ```
 There seems to be linear association between open gross and total gross. open_gross = 0.59 + 0.28total_gross
 
@@ -469,7 +469,7 @@ mult_fit <- lm(open_gross_millions ~ review_score + year + runtime_minutes + rat
 mult_fit %>% 
  summary() %>% 
  broom::tidy() %>% 
- datatable()
+ datatable(class = 'cell-border stripe')
 
 
 best <- function(model, ...) 
@@ -490,7 +490,7 @@ best_fit <-lm(open_gross_millions ~ review_score + rating + total_gross_millions
 best_fit %>% 
  summary() %>% 
  broom::tidy() %>% 
- datatable()
+ datatable(class = 'cell-border stripe')
 
 
 ```
