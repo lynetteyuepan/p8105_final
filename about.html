@@ -9,7 +9,9 @@
 <meta name="generator" content="pandoc" />
 
 
+<meta name="author" content="Lynette, Jingxuan, Manqi, Yixi" />
 
+<meta name="date" content="2017-12-06" />
 
 <title>About</title>
 
@@ -19,6 +21,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
@@ -161,6 +166,101 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -194,7 +294,7 @@ $(document).ready(function () {
   <a href="p8105_final_jh3909.html">Review scores</a>
 </li>
 <li>
-  <a href="P8105_final_mc4433.html">Opening gross</a>
+  <a href="p8105_final_mc4433.html">Opening gross</a>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -206,16 +306,77 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">About</h1>
+<h4 class="author"><em>Lynette, Jingxuan, Manqi, Yixi</em></h4>
+<h4 class="date"><em>12/06/2017</em></h4>
 
 </div>
 
 
+<div id="introduction" class="section level2">
+<h2>Introduction:</h2>
+<p>Movies have become a big part of everyday life worldwide and their popularity grow with time. In this project, we intend to explore the explanatory factors for the total gross, review scores and opening gross of movies that were released in North America from 2006 to 2016. We attempt to use linear regression model for each of three interested outcomes including total gross, review scores (metacritic review score) and opening gross. Our goal of analysis is to look into the relationship between a variable such as genre, actors/actresses, production company, director and review scores and each of our interested outcome variables. Mainly, there are three outcomes including total gross, review scores (metacritic review score) and opening gross that we are interested in for each movie in North America that was released from 2006 to 2016.</p>
+</div>
+<div id="data-and-methods" class="section level2">
+<h2>Data and methods:</h2>
 <ul>
-<li>This website contains the final project for <a href="http://jeffgoldsmith.com/DSI/index.html">Jeff Goldsmith’s Data Science I class</a> in the Department of Biostatistics at Columbia University.</li>
+<li><strong>Data source:</strong>
+<ul>
+<li><a href="http://www.boxofficemojo.com/yearly/chart/?yr=2014&amp;view=releasedate&amp;view2=domestic&amp;sort=gross&amp;order=DESC&amp;&amp;p=.htm">Domestic Box office:</a> (Only use movies with total sales that ranked top 100)</li>
+<li><a href="https://www.kaggle.com/PromptCloudHQ/imdb-data">06-16 movie:</a></li>
+</ul></li>
+<li><strong>Data Description:</strong>
+<ul>
+<li>The box office data was obtained by using a for-loop that scraped movies with total sales that ranked top 100 in each year from 2006 to 2016, resulting in a data frame containing 1100 rows and five variables: movie titles, studio, total gross, opening gross and released year.</li>
+<li>The movie dataset includes 1,000 most popular movies on IMDB (<a href="http://www.imdb.com/" class="uri">http://www.imdb.com/</a>) from 2006 to 2016. The data points included are: Title, Genre, Description, Director, Actors, Year, Runtime, Rating, Votes, Revenue, Metascore for each movie.</li>
+</ul></li>
+<li><strong>Data cleaning and scraping:</strong>
+<ul>
+<li>Firstly, we wrote a for-loop to scape the box office dataset from the online source which includes movies with total box office that ranked top 100 in each year from 2006 to 2016. After we changed the names of box office dataset for consistency, we joined the box office dataset with the movie dataset obtained from kaggle by the movie names.</li>
+<li>Next, we cleaned our combined dataset. We decided to keep the total gross column and replaced NA in total gross with the values in Revenue column in movie dataset. Also, we divided the total gross by 10^6 to reduce the number of zeros in that column. Furthermore, we separated the actor column into four new columns for later analysis purpose.</li>
+</ul></li>
+<li><strong>Statistical analysis:</strong>
+<ul>
+<li>In this project, we mainly interested in analyzing the relationship between explanatory variable and outcome using linear regression model, specifically simple linear regression. Specifically, we hypothesized that there is a linear relationship between th explanatory variable(s) and outcome. Simple linear regression is a statistical method that allows us to summarize and study relationships between two variables. Multiple linear regression is also one type of linear regression model and contains more than one explanatory variables. Both simple linear regression and multiple linear regression are used to explore the relationship between predictor variable(s) and the interested outcome.</li>
+<li>lm function is used to fit a linear regression model to the interested explanatory variable(s) and dependent outcome. For simplicity, we used the P value (Pr&gt;|t|) in each summarized lm() output to draw conclusion about whether the variable is significant predictor of the outcome. Commonly, we used 0.05 significance level to make conclusions. Moreover, lm function gives us the estimated coefficients (slope) for the linear model, which can used to predict how the outcome will change in response to the increase of the predictor.</li>
+<li>ANOVA is used when the explanatory variable has different levels/categories. Firstly, we used the ANOVA function to determine whether the variable as a whole is a significant predictor. Then we can explore the estimated coefficient for each level of that variable by using lm function. The estimated coefficient indicate how the outcome will change in response to the presence of a certain level/category of the predictor.</li>
+</ul></li>
 </ul>
+</div>
+<div id="results" class="section level2">
+<h2>Results:</h2>
+<div id="total-gross-as-outcome" class="section level3">
+<h3>Total gross as outcome</h3>
+<ul>
+<li><strong>Objective:</strong> In this part of the analysis, we are specifically interested in total gross as the outcome. Moreover, we attempt to test whether review score, genre, actor, director and production company could be the predictors for the total gross (movies without total gross are omitted).
+<ul>
+<li><strong>Multiple linear regression model:</strong> From the hypothesis testing and analysis presented above, we know that production company, director and review scores are statistical significant predictors for the total gross. Then we try a multiple linear regression model with all these significant predictors included. Since we include both continuous and categorical predictors in the model, we need to use ANOVA table to test whether each of the predictor is statistically significant.</li>
+</ul></li>
+</ul>
+<hr />
+<ul>
+<li><p><strong>Results:</strong></p>
+<ul>
+<li><p><strong>Review score:</strong> At 0.05 significance level, we can say that there is a linear association between total gross and review scores. The best fitting linear line is <span class="math inline">\(y = 34.04 + 0.85x\)</span>. For every one score increase in metascore, we expected the increase of total gross to be 0.85 (in millions).</p></li>
+<li><p><strong>Genre:</strong> At 0.001 significance level, we can say that genre is a significant predictor of the total box office. Then the estimated coefficient for each genre is given in the data table, which shows us how the total gross will change when the movie falls into one of the genres.</p></li>
+<li><p><strong>Director:</strong> At 0.001 significance level, we can say that director is a significant predictor of the total box office. Then the estimated coefficient for each director is given in the data table, which shows us how the total gross will change related to the director of the movie.</p></li>
+<li><p><strong>Actors/actresses:</strong> At 0.05 significance level, we fail to conclude the linear association since actor/actress is not a significant predictor of the total gross.</p></li>
+<li><p><strong>Production company:</strong> At 0.001 significance level, we can conclude that production company is a significant predictor of the total box office. Then the estimated coefficient for each production company is given in the data table, which shows us how the total gross will change related to the production company of the movie.</p></li>
+</ul></li>
+</ul>
+<hr />
+<ul>
+<li><strong>Results of Multiple linear regression model:</strong> By using the ANOVA function, we can see that when put these four predictors into one regression mode, all of these four predictors are still statistically significant at 0.05 significance level. Then the best fitted coefficients estimate is obtained by using the lm function, which tells us how the total gross will change when one of the category presents or has certain values while holding other covariates constant.</li>
+</ul>
+</div>
+</div>
+<div id="discussion" class="section level2">
+<h2>Discussion:</h2>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
