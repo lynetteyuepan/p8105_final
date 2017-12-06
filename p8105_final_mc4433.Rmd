@@ -3,6 +3,7 @@ title: "P8105_final_mc4433"
 author: "Manqi Cai"
 output: 
   html_document:
+    code_folding: hide
     toc: true
     toc_float: true
 ---
@@ -12,9 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r packages, echo=FALSE, warning=FALSE}
-
-library(dplyr)
+```{r packages, include=FALSE, warning=FALSE}
 library(tidyverse)
 library(httr)
 library(rvest)
@@ -28,11 +27,12 @@ library(DT)
 library(leaps)
 library(stats)
 library(MASS)
+library(dplyr)
 
 ```
 
 # Prepare datasets
-```{r data_prepare, echo=FALSE, warning=FALSE}
+```{r data_prepare, include=FALSE, warning=FALSE}
 # read IMDB data from Kaggle
 movie = read.csv("./data/IMDB-Movie-Data.csv")
 
@@ -72,7 +72,7 @@ boxoffice = bind_rows(boxoffice, box_office_year)
 }
 ```
 
-```{r combine and tidy dataset, echo=FALSE, warning=FALSE}
+```{r combine and tidy dataset, warning=FALSE}
 set.seed(1)
 # renmae the movie_title in movie dataset in order to join two datasets
 movie_rename = movie %>% 
@@ -108,11 +108,11 @@ movie_with_boxoffice = movie_with_boxoffice %>%
 
 #develop relationship between open_gross and other possible indicators
 
-```{r the top 10 highest open-gross movie, echo=FALSE, warning=FALSE}
+```{r the top 10 highest open-gross movie, warning=FALSE}
 
 movie_with_boxoffice %>%
   arrange(desc(open_gross_millions)) %>% 
-  dplyr::select(-description) %>% 
+  dplyr::select(movie_title, open_gross_millions) %>% 
   head(10) %>% 
   datatable()
 ```
@@ -120,7 +120,7 @@ From the table above, we can see the top 10 movies with the 10 best opening gros
 
 ##Is there a relationship between open gross and review score?
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, warning=FALSE}
 # visualize the linear regression 
 movie_with_boxoffice %>% 
   na.omit() %>% 
@@ -141,7 +141,7 @@ movie_with_boxoffice %>%
 From the scatterplots given above, we may consider that, there seems not be very strong linear association between review score and opening gross millions through the scope of 2006-2016 years. What's more, if we seperate the review scores by years, the year 2006, 2007, 2011, the plots seems to give out negative association between review_score and opening gross. However, the year 2008 ,2012, 2014 ,2015, the association between review score and opening gross seems to be possitive.
 
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, warning=FALSE}
 set.seed(1)
 #Fit a linear regression model for review score and opening gross
 lm(open_gross_millions ~ review_score, data = movie_with_boxoffice) %>% 
@@ -155,21 +155,21 @@ qt(0.975, df=998)
 ```
 From the linear regression given above, we can see that the$\beta_{1}$'s p-value is 0.28 far above 0.05, we may consider this not be a siginificant predictor. The sd of review score is 0.09 while the $t_{0.975,998}$ is 1.96, $t^{*}<t_{0.975,998}$, we fail to rejct the null, while $H_{0}$:$\beta_{1}$=0. Therefore, there seems to be no relationship between review score and open gross.
 
-```{r the top 10 review score with its open_gross, echo=FALSE, warning=FALSE}
+```{r the top 10 review score with its open_gross, warning=FALSE}
 
 movie_with_boxoffice %>%
   arrange(desc(review_score)) %>% 
-  dplyr::select(-description) %>% 
+  dplyr::select(movie_title, review_score, open_gross_millions) %>% 
   head(10) %>% 
   datatable()
 ```
 It seems that none of the top 10 review score movie appears in the top 10 opening gross movies.
 So will the worst 10 review score movies contain top 10 opening gross movies?
-```{r the worst 10 review score with its open_gross, echo=FALSE, warning=FALSE}
+```{r the worst 10 review score with its open_gross, warning=FALSE}
 
 movie_with_boxoffice %>%
   arrange(review_score) %>% 
-  dplyr::select(-description) %>% 
+  dplyr::select(movie_title, review_score, open_gross_millions) %>% 
   head(10) %>% 
   datatable()
 ```
@@ -206,7 +206,7 @@ plot_ly(movie_with_boxoffice, x = ~rating, y = ~year, z = ~open_gross_millions,
 From the first scatterplot, we see that the linear association between rating and open gross seems to be flat. Overall, it's a postive association. From the 3d scatterplot we can see that, there seems to be some outliers, however the distribution between rating and opening gross seems to be fairly similar through years.
 
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, warning=FALSE}
 
 #Fit a linear regression model for review score and opening gross
 opengross_rating_lm <- lm(open_gross_millions ~ rating, data = movie_with_boxoffice) 
@@ -221,7 +221,7 @@ qt(0.975, df=998)
 ```
 Since the sd of rating is 1.79 < $t_{0.975, 998}$ ,therefore, we still fail to reject the null, there seems to be no linear association between rating and movie_with_boxoffcie.
 
-```{r find the outliers, echo=FALSE, warning=FALSE}
+```{r find the outliers, warning=FALSE}
 
 stu_res<-rstandard(opengross_rating_lm)
 outliers_y<-stu_res[abs(stu_res)>2.5]
@@ -234,30 +234,30 @@ There seems to be 10 outliers in y.
 
 
 
-```{r the top 10 rating with its open_gross, echo=FALSE, warning=FALSE}
+```{r the top 10 rating with its open_gross, warning=FALSE}
 
 movie_with_boxoffice %>%
   arrange(desc(rating)) %>% 
-  dplyr::select(-description) %>% 
+  dplyr::select(movie_title, rating, open_gross_millions) %>% 
   head(10) %>% 
   datatable()
 ```
 The two sets of Dark Knites appear again, and they are both directed by Christopher Nolan. He is indeed a good director.
 
 So will the worst 10 rating movies contain top 10 opening gross movies?
-```{r the worst 10 rating with its open_gross, echo=FALSE, warning=FALSE}
+```{r the worst 10 rating with its open_gross, warning=FALSE}
 
 movie_with_boxoffice %>%
   arrange(rating) %>% 
-  dplyr::select(-description) %>% 
+  dplyr::select(movie_title, rating, open_gross_millions) %>% 
   head(10) %>% 
   datatable()
 ```
 Luckily, the worst 10 rating don't contain the top 10 opening gross movies.
 
 ## Is there a relationship between open gross and genre?
-```{r, echo=FALSE, warning=FALSE}
-set.seed(1)
+```{r tidy dataset for genre, warning=FALSE}
+#tidy dataset for genre
 
 movie_with_boxoffice_genre_sep = movie_with_boxoffice %>%
   mutate(genre = as.character(genre)) %>% 
@@ -265,22 +265,50 @@ movie_with_boxoffice_genre_sep = movie_with_boxoffice %>%
   mutate(genre = word) %>% 
   filter(!genre=="fi") %>% 
   mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) 
+```
+
+```{r the ranking of genre, warning=FALSE}
+movie_with_boxoffice_genre_sep %>% 
+  group_by(genre) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  head(10)
+
+movie_with_boxoffice_genre_sep %>% 
+  group_by(genre) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  tail(10)
+
+```
+We can see from the counting that, the most 10 types of genres the movies are :drama, action, comedy, adventure, thriller, crime, romance, sci-fi, horror and mystery. The movies the director choose to directe least is musical. Therefore, we may be curious that if these are the top 10 open gross movies?
+
+```{r the top 10 open gross movies(genre), warning=FALSE}
+movie_with_boxoffice_genre_sep %>%   
+  arrange(desc(open_gross_millions)) %>% 
+  pull(genre) %>% 
+  head(10)
+```
+Interstingly, that 4 action movies are within top 10 open-gross movie, 3 sci-fi, 3 adventure, which rank 2nd, 8th and 4th in the ranking of genres. However, no drama for top 10 movies, while the number of drama are nearly 1.5 times the number of action. We think the reasons here is because a lot of movies can be considered as drama.
+
+```{r, warning=FALSE}
 
 # check if genre is a significant predictor
 anova(lm(open_gross_millions ~ genre, data = movie_with_boxoffice_genre_sep))
+```
+From the anova table, it looks like that genre is a significant predictor
 
+```{r, warning=FALSE}
 # fit linear regression for each genre
 lm(open_gross_millions ~ genre, data = movie_with_boxoffice_genre_sep) %>% 
   summary() %>% 
   broom::tidy() %>% 
   filter(p.value < 0.05) %>% 
   datatable()
+```
+I choose the p.valur < 0.05 to find the significant genre for predicting open-gross.
 
-movie_with_boxoffice_genre_sep %>%   
-  arrange(desc(open_gross_millions)) %>% 
-  pull(genre) %>% 
-  head(10)
-
+```{r, warning=FALSE}
   
 movie_with_boxoffice_genre_sep %>% 
 plot_ly(., x = ~genre,  y = ~open_gross_millions, color = ~genre, type = "box")
@@ -303,69 +331,140 @@ plot_ly(movie_with_boxoffice_genre_sep, labels = ~genre, values = ~open_gross_mi
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   
 ```
+From the pie chart, we can see that fantasy contributes most open gross, while the action, adventurem and the sci_fi cotributes the same. It's because that a movie consider to be actio can also be cosidered as adventure.
 
 ### Is there a relationship between open gross and director?
 
-```{r, include=FALSE, warning=FALSE}
-set.seed(1)
+```{r the ranking of director, warning=FALSE}
+movie_with_boxoffice %>% 
+  group_by(director) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  head(10)
+
+movie_with_boxoffice %>% 
+  group_by(director) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  tail(10)
+
+```
+From the ranking we ca see that Ridley Scott is most dilligent, will his movies have total open gross the highest? Or other director?
+
+```{r, warning=FALSE}
 
 # check if director is a significant predictor
 anova(lm(open_gross_millions ~ director, data = movie_with_boxoffice))
-## significant
 
+```
+
+From the anova table, it looks like that director is a significant predictor
+
+```{r, warning=FALSE}
 # fit linear regression for directors
 lm(open_gross_millions ~ director, data = movie_with_boxoffice) %>% 
   summary() %>% 
   broom::tidy() %>% 
   filter(p.value < 0.5) %>% 
   DT::datatable() 
-
-# visualize the relationship between total gross and 
-
-movie_with_boxoffice %>% 
-  plot_ly(x = ~director,  y = ~open_gross_millions, color = ~director, type = "box") %>% 
-  layout(showlegend = FALSE)
-
-movie_with_boxoffice %>% 
-  arrange(desc(open_gross_millions)) %>% 
-  pull(director) %>% 
-  head(10)
-
 ```
 
+```{r, warning=FALSE}
+# visualize the relationship between total gross and 
+plot_ly(movie_with_boxoffice, labels = ~director, values = ~open_gross_millions, type = 'pie',
+        textposition = 'inside',
+        textinfo = 'label+percent',
+        insidetextfont = list(color = '#FFFFFF'),
+        hoverinfo = 'text',
+        text = ~paste('$', open_gross_millions, ' millions'),
+        marker = list(colors = colors,
+                      line = list(color = '#FFFFFF', width = 1)),
+                      #The 'pull' attribute can also be used to create space between the sectors
+        showlegend = FALSE) %>%
+  layout(title = 'Opening gross from 2006:2016',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+
+movie_with_boxoffice %>% 
+  plot_ly(x = ~director,  y = ~open_gross_millions, color = ~director, type = "bar") %>% 
+  layout(showlegend = FALSE)
+
+```
+We can see that Colin Trevorrow contributes the most open gross, not Ridley Scott.
+
+
 ### Is there a relationship between open gross and actor?
-```{r, include=FALSE, warning=FALSE}
+```{r the ranking of actor, warning=FALSE}
+movie_with_boxoffice %>% 
+  group_by(actor1) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  head(10)
+
+movie_with_boxoffice %>% 
+  group_by(actor2) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  head(10)
+
+movie_with_boxoffice %>% 
+  group_by(actor3) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  head(10)
+
+
+movie_with_boxoffice %>% 
+  group_by(actor4) %>% 
+  summarize(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  head(10)
+```
+
+
+```{r, warning=FALSE}
 set.seed(1)
 
 # separate the actors in actor column into four columns; then use gather function in order to do the anova test.
 movie_with_boxoffice_actor_combi= 
   movie_with_boxoffice %>%
   gather(., key = "num_actor", value = "main_actors", actor1:actor4)
+```
 
+```{r, warning=FALSE}
 # check if genre is a significant predictor
 anova(lm(open_gross_millions ~ main_actors, data = movie_with_boxoffice_actor_combi))
 ## not significant
-
-
-# visualize the relationship between total gross and 
-
-movie_with_boxoffice_actor_combi %>% 
-  plot_ly(x = ~main_actors,  y = ~open_gross_millions, color = ~main_actors, type = "box") %>% 
-  layout(showlegend = FALSE)
-
-movie_with_boxoffice_actor_combi %>%
-  group_by(main_actors) %>% 
-  arrange(desc(open_gross_millions)) %>% 
-  head(10) %>% 
-  dplyr::select(movie_title, main_actors) %>% 
-  knitr::kable()
-  
 ```
+From the anova table, it looks like that actor is  not a significant predictor
 
-Finally we may want to find a overall linear regression for opening gross
-```{r, include=FALSE, warning=FALSE}
+### Is there a relationship between open gross and total gross?
+```{r, warning=FALSE}
+# visualize the linear regression 
+movie_with_boxoffice %>% 
+  na.omit() %>% 
+  ggplot(aes(x=open_gross_millions, y = total_gross_millions)) +
+  geom_point(alpha = .5) +
+  stat_smooth(method = "lm") 
+
+```
+From the scatterplot we can clearly see that, there seems to be a strong linear association between open gross and total gross
+
+```{r, warning=FALSE}
+lm(open_gross_millions ~ total_gross_millions, data = movie_with_boxoffice) %>% 
+  summary() %>% 
+  broom::tidy() %>% 
+  DT::datatable() 
+```
+There seems to be linear association between open gross and total gross. open_gross = 0.59 + 0.28total_gross
+
+
+
+##Finally we may want to find a overall linear regression for opening gross
+```{r, warning=FALSE}
 # fit linear regression for opening gross (use stepwise regression)
-mult_fit <- lm(open_gross_millions ~ review_score + year + runtime_minutes + rating + votes, data = movie_with_boxoffice)
+mult_fit <- lm(open_gross_millions ~ review_score + year + runtime_minutes + rating + votes + total_gross_millions, data = movie_with_boxoffice)
 
 mult_fit %>% 
  summary() %>% 
@@ -386,7 +485,7 @@ best <- function(model, ...)
 # Select the 'best' 1 model of all subsets
 round(best(mult_fit, nbest = 1), 4)
 
-best_fit <-lm(open_gross_millions ~ year + rating + votes, data = movie_with_boxoffice)
+best_fit <-lm(open_gross_millions ~ review_score + rating + total_gross_millions, data = movie_with_boxoffice)
 
 best_fit %>% 
  summary() %>% 
@@ -395,4 +494,4 @@ best_fit %>%
 
 
 ```
-From the tables given above, we select the smallest bic value, which is model with 3 predictors with bic  -128.6889(year, rating, vote). The regression model is $open_gross = -2791.6 + 1.44 year - 13.55rating + 0.0001votes$
+From the tables given above, we select the smallest bic value, which is model with 3 predictors with bic  -660.3094(review score, rating, total gross millions). The regression model is open_gross = 36.44 -0.23review_score - 3.49rating + 0.30total_gross_millions
