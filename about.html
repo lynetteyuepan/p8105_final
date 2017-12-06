@@ -332,7 +332,7 @@ div.tocify {
 <li><strong>Data cleaning and scraping:</strong>
 <ul>
 <li>Firstly, we wrote a for-loop to scape the box office dataset from the online source which includes movies with total box office that ranked top 100 in each year from 2006 to 2016. After we changed the names of box office dataset for consistency, we joined the box office dataset with the movie dataset obtained from kaggle by the movie names.</li>
-<li>Next, we cleaned our combined dataset. We decided to keep the total gross column and replaced NA in total gross with the values in Revenue column in movie dataset. Also, we divided the total gross by 10^6 to reduce the number of zeros in that column. Furthermore, we separated the actor column into four new columns for later analysis purpose.</li>
+<li>Next, we cleaned our combined dataset. We decided to keep the total gross column and replaced NA in total gross with the values in Revenue column in movie dataset. Also, we divided the total gross by 10^6 to reduce the number of zeros in that column. Furthermore, we separated the actor column into four new columns for later analysis purpose. And then separate the genre into three columns for later data analysis.</li>
 </ul></li>
 <li><strong>Statistical analysis:</strong>
 <ul>
@@ -351,9 +351,6 @@ div.tocify {
 <ul>
 <li><strong>Multiple linear regression model:</strong> From the hypothesis testing and analysis presented above, we know that production company, director and review scores are statistical significant predictors for the total gross. Then we try a multiple linear regression model with all these significant predictors included. Since we include both continuous and categorical predictors in the model, we need to use ANOVA table to test whether each of the predictor is statistically significant.</li>
 </ul></li>
-</ul>
-<hr />
-<ul>
 <li><p><strong>Results:</strong></p>
 <ul>
 <li><p><strong>Review score:</strong> At 0.05 significance level, we can say that there is a linear association between total gross and review scores. The best fitting linear line is <span class="math inline">\(y = 34.04 + 0.85x\)</span>. For every one score increase in metascore, we expected the increase of total gross to be 0.85 (in millions).</p></li>
@@ -362,11 +359,26 @@ div.tocify {
 <li><p><strong>Actors/actresses:</strong> At 0.05 significance level, we fail to conclude the linear association since actor/actress is not a significant predictor of the total gross.</p></li>
 <li><p><strong>Production company:</strong> At 0.001 significance level, we can conclude that production company is a significant predictor of the total box office. Then the estimated coefficient for each production company is given in the data table, which shows us how the total gross will change related to the production company of the movie.</p></li>
 </ul></li>
+<li><p><strong>Results of Multiple linear regression model:</strong> By using the ANOVA function, we can see that when put these four predictors into one regression mode, all of these four predictors are still statistically significant at 0.05 significance level. Then the best fitted coefficients estimate is obtained by using the lm function, which tells us how the total gross will change when one of the category presents or has certain values while holding other covariates constant.</p></li>
 </ul>
 <hr />
+<hr />
+</div>
+<div id="review-score-as-outcome" class="section level3">
+<h3>Review score as outcome</h3>
 <ul>
-<li><strong>Results of Multiple linear regression model:</strong> By using the ANOVA function, we can see that when put these four predictors into one regression mode, all of these four predictors are still statistically significant at 0.05 significance level. Then the best fitted coefficients estimate is obtained by using the lm function, which tells us how the total gross will change when one of the category presents or has certain values while holding other covariates constant.</li>
+<li><p><strong>Objective:</strong> And in this part of the analysis, we are focusing on review score as the outcome. We are interested in whether total gross, genre, actor, director and film studio could be the predictors for the review score (movies without review score are omitted).</p></li>
+<li><p><strong>Results:</strong></p>
+<ul>
+<li><p><strong>Total gross:</strong> At 0.05 significance level, we can say that the positive association between review scores and boxoffice is significant. With every million increase in boxoffice, the expected review score will increase by 0.023 on average.</p></li>
+<li><p><strong>Genre:</strong> The positive association between review scores and genre is significant. There are 12 types of genres are significant predictor for review score. Genres with top three high estimate of review scores are history, animation and biography.</p></li>
+<li><p><strong>Director:</strong> At 0.05 significance level, director has significant association with review score. Then the estimated coefficient for each director is given in the data table, which shows us how the review score will change related to the director of the movie.</p></li>
+<li><p><strong>Actors/actresses:</strong> At 0.05 significance level, actors has significant association with review score. Then the estimated coefficient for each actor is given in the data table, which shows us how the review score will change related to the director of the movie.</p></li>
+<li><p><strong>Production company:</strong> At 0.05 significance level, we can conclude that film studio is a significant predictor of the review score. Then the estimated coefficient for each studio is given in the data table, which shows us how the review score will change related to the production company of the movie.</p></li>
+</ul></li>
 </ul>
+<hr />
+<hr />
 </div>
 <div id="open-gross-as-outcome" class="section level3">
 <h3>Open gross as outcome</h3>
@@ -375,15 +387,17 @@ div.tocify {
 <ul>
 <li><strong>Multiple linear regression model:</strong> From the hypothesis testing and analysis presented above, we know that rating ,genre and director are statistical significant predictors for the open gross. Then we try a multiple linear regression model with all these significant predictors included. Since we include both continuous and categorical predictors in the model, we need to use ANOVA table to test whether each of the predictor is statistically significant.</li>
 </ul></li>
-</ul>
-<hr />
-<ul>
 <li><strong>Results of Multiple linear regression model:</strong> + Finally, I fit a overall linear regression between open gross and review score, rating, total gross millions.The regression model is open_gross = 36.44 -0.23review_score - 3.49rating + 0.30total_gross_millions.</li>
 </ul>
 </div>
 </div>
 <div id="discussion" class="section level2">
 <h2>Discussion:</h2>
+<p><strong>Fun Finding! :</strong></p>
+<ul>
+<li><p>Directors with top three high review scores are Barry Jenkins, Kenneth Lonergan and Todd Haynes. They directed Moonlight, Manchester by the Sea and Carol respectively, which are all movies with good reputation and been nominated by Oscar. It’s not hard to think they have high review score! :)</p></li>
+<li><p>It is surprising that top film studios like Warner Bros and Universal Studio have are negatively associated with review score, which means if the film is made by these film, it may have a lower review score! The reason behind this phenomenon may be top studios produce hundreds of movie each year and not all of them got good reputaion, which lower the eastimate of review scores.</p></li>
+</ul>
 </div>
 
 
