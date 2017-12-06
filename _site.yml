@@ -14,7 +14,7 @@ navbar:
     - text: "Review scores"
       href: p8105_final_jh3909.html  
     - text: "Opening gross"
-      href: p8105_final_mc4433.html 
+      href: p8105_final_mc4433.html
    
 output:
   html_document:
