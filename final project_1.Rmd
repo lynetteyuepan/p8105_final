@@ -20,7 +20,6 @@ library(DT)
 library(plotly)
 ```
 
-# Prepare datasets
 ```{r data_prepare, include=FALSE,warning=FALSE,echo=FALSE}
 # read IMDB data from Kaggle
 movie = read.csv("./data/IMDB-Movie-Data.csv")
@@ -93,6 +92,9 @@ movie_with_boxoffice = movie_with_boxoffice %>%
   separate(genre_sep, into = c("genre1", "genre2", "genre3"), sep = ",")
 ```
 
+
+##Top ranked movies with best box-office 
+
 ```{r warning=FALSE,echo=FALSE}
 ##Top ranked movies with best box-office 
 movie_with_boxoffice %>% 
@@ -101,6 +103,8 @@ movie_with_boxoffice %>%
   arrange(desc(box_movie)) %>% 
   datatable()
 ```
+
+##Top ranked movies with best review_score
 
 ```{r warning=FALSE,echo=FALSE}
 ##Top ranked movies with best review_score
@@ -111,6 +115,8 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
+##Top ranked movies with best rating
+
 ```{r warning=FALSE,echo=FALSE}
 ##Top ranked movies with best rating
 movie_with_boxoffice %>% 
@@ -119,6 +125,8 @@ movie_with_boxoffice %>%
   arrange(desc(rating)) %>% 
   datatable()
 ```
+
+##Top ranked movies with highest votes 
 
 ```{r warning=FALSE,echo=FALSE}
 ##Top ranked movies with highest votes 
@@ -129,6 +137,8 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
+##Top ranked movies with longest runtime 
+
 ```{r warning=FALSE,echo=FALSE}
 ##Top ranked movies with longest runtime 
 movie_with_boxoffice %>% 
@@ -137,6 +147,8 @@ movie_with_boxoffice %>%
   arrange(desc(runtime_minutes)) %>% 
   datatable()
 ```
+
+##Distribution of movie genre
 
 ```{r warning=FALSE,echo=FALSE}
 ## Distribution of movie genre 
@@ -158,6 +170,7 @@ movie_with_boxoffice %>%
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
 ```
 
+##Director:  The top ranked director with best box-office
 
 ```{r warning=FALSE,echo=FALSE}
 ##Director:  The top ranked director with best box-office
@@ -167,6 +180,8 @@ movie_with_boxoffice %>%
   arrange(desc(box_movie)) %>% 
   datatable()
 ```
+
+##Type: The top ranked type of movies with best box-office
 
 ```{r warning=FALSE,echo=FALSE}
 ##Type: The top ranked type of movies with best box-office
@@ -198,6 +213,8 @@ movie_with_boxoffice %>%
 ##range 
 ```
 
+##Actor/Actress:  The top ranked actor/actress with best box-office
+
 ```{r warning=FALSE,echo=FALSE}
 ##Actor/Actress:  The top ranked actor/actress with best box-office
 movie_with_boxoffice %>% 
@@ -207,6 +224,8 @@ movie_with_boxoffice %>%
   arrange(desc(box_movie)) %>% 
   datatable()
 ```
+
+##Production company:  The top ranked production company  with best box-office
 
 ```{r warning=FALSE,echo=FALSE}
 ##Production company:  The top ranked production company  with best box-office
