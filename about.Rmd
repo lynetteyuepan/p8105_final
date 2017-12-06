@@ -39,7 +39,7 @@ Movies have become a big part of everyday life worldwide and their popularity gr
 * **Objective:** In this part of the analysis, we are specifically interested in total gross as the outcome. Moreover, we attempt to test whether review score, genre, actor, director and production company could be the predictors for the total gross (movies without total gross are omitted).
     + **Multiple linear regression model:** From the hypothesis testing and analysis presented above, we know that production company, director and review scores are statistical significant predictors for the total gross. Then we try a multiple linear regression model with all these significant predictors included. Since we include both continuous and categorical predictors in the model, we need to use ANOVA table to test whether each of the predictor is statistically significant.
 
-***
+
 
 * **Results:**
 
@@ -58,6 +58,33 @@ Movies have become a big part of everyday life worldwide and their popularity gr
 
 * **Results of Multiple linear regression model:** By using the ANOVA function, we can see that when put these four predictors into one regression mode, all of these four predictors are still statistically significant at 0.05 significance level. Then the best fitted coefficients estimate is obtained by using the lm function, which tells us how the total gross will change when one of the category presents or has certain values while holding other covariates constant.
 
+
+***
+***
+
+
+### Review score as outcome
+
+* **Objective:** And in this part of the analysis, we are focusing on review score as the outcome. We are interested in whether total gross, genre, actor, director and film studio could be the predictors for the review score (movies without review score are omitted).
+
+
+***
+
+* **Results:**
+
+    + **Total gross:** At 0.05 significance level, we can say that the positive association between review scores and boxoffice is significant. With every million increase in boxoffice, the expected review score will increase by 0.023 on average.
+
+    + **Genre:** The positive association between review scores and genre is significant. There are 12 types of genres are significant predictor for review score. Genres with top three high estimate of review scores are history, animation and biography.
+
+    + **Director:** At 0.05 significance level, director has significant association with review score. Then the estimated coefficient for each director is given in the data table, which shows us how the review score will change related to the director of the movie. 
+
+    + **Actors/actresses:** At 0.05 significance level, actors has significant association with review score. Then the estimated coefficient for each actor is given in the data table, which shows us how the review score will change related to the director of the movie. 
+
+    + **Production company:** At 0.05 significance level, we can conclude that film studio is a significant predictor of the review score. Then the estimated coefficient for each studio is given in the data table, which shows us how the review score will change related to the production company of the movie. 
+    
+***
+***
+
 ### Open gross as outcome
 
 * **Objective:** In this part of the analysis, we are specifically interested in open gross as the outcome. Moreover, we attempt to test whether review score, genre, actor, and director could be the predictors for the open gross. What's more, we use open gross as a predictor of total gross.
@@ -67,5 +94,7 @@ Movies have become a big part of everyday life worldwide and their popularity gr
 ***
 
 * **Results of Multiple linear regression model:**  +  Finally, I fit a overall linear regression between open gross and review score, rating, total gross millions.The regression model is open_gross = 36.44 -0.23review_score - 3.49rating + 0.30total_gross_millions.
+
+
 
 ## Discussion:
