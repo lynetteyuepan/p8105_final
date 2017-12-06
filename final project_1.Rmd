@@ -3,7 +3,7 @@ title: "final project"
 output: html_document
 ---
 
-```{r packages}
+```{r results='hide', message=FALSE, warning=FALSE}
 library(dplyr)
 library(tidyverse)
 library(httr)
@@ -94,55 +94,92 @@ movie_with_boxoffice = movie_with_boxoffice %>%
 ```
 
 ```{r}
-##Top 10 movies with best box-office 
+##Top ranked movies with best box-office 
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
   summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
-  head(10) %>% 
   datatable()
 ```
 
 ```{r}
-##Director:  The top 10 ranked director with best box-office
+##Top ranked movies with best review_score
 movie_with_boxoffice %>% 
-  group_by(director) %>% 
-  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
-  arrange(desc(box_movie)) %>% 
-  head(10) %>% 
+  group_by(movie_title) %>% 
+  select(movie_title, review_score) %>% 
+  arrange(desc(review_score)) %>% 
   datatable()
 ```
 
 ```{r}
-##Type: The top 10 ranked type of movies with best box-office
+##Top ranked movies with best rating
 movie_with_boxoffice %>% 
-  mutate(genre = as.character(genre)) %>% 
-  unnest_tokens(word,genre) %>% 
-  mutate(genre = word) %>% 
-  group_by(genre)%>%
-  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
-  filter(!genre=="fi") %>% 
-  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>%
-  arrange(desc(box_movie)) %>% 
-  head(10) %>% 
+  group_by(movie_title) %>% 
+  select(movie_title, rating) %>% 
+  arrange(desc(rating)) %>% 
   datatable()
+```
 
+```{r}
+##Top ranked movies with highest votes 
+movie_with_boxoffice %>% 
+  group_by(movie_title) %>% 
+  select(movie_title, votes) %>% 
+  arrange(desc(votes)) %>% 
+  datatable()
+```
+
+```{r}
+##Top ranked movies with longest runtime 
+movie_with_boxoffice %>% 
+  group_by(movie_title) %>% 
+  select(movie_title, runtime_minutes) %>% 
+  arrange(desc(runtime_minutes)) %>% 
+  datatable()
+```
+
+```{r}
+## Distribution of movie genre 
 ##Donut charts represent genre 
 movie_with_boxoffice %>% 
   mutate(genre = as.character(genre)) %>% 
   unnest_tokens(word, genre) %>% 
   mutate(genre = word) %>% 
   group_by(genre) %>%
-  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
+  summarize(n = n()) %>% 
   filter(!genre=="fi") %>% 
   mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>% 
-  arrange(desc(box_movie)) %>% 
-  plot_ly(labels = ~genre, values = ~box_movie, textposition = 'inside',
+  arrange(desc(n)) %>% 
+  plot_ly(labels = ~genre, values = ~n, textposition = 'inside',
         textinfo = 'label+percent') %>%
   add_pie(hole = 0.6) %>%
-  layout(title = "Donut charts using Plotly",  showlegend = FALSE,
+  layout(title = "Distribution of different movie genre type",  showlegend = FALSE,
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
+```
+
+
+```{r}
+##Director:  The top ranked director with best box-office
+movie_with_boxoffice %>% 
+  group_by(director) %>% 
+  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE), mean_review = mean(review_score, na.rm = TRUE)) %>% 
+  arrange(desc(box_movie)) %>% 
+  datatable()
+```
+
+```{r}
+##Type: The top ranked type of movies with best box-office
+movie_with_boxoffice %>% 
+  mutate(genre = as.character(genre)) %>% 
+  unnest_tokens(word,genre) %>% 
+  mutate(genre = word) %>% 
+  group_by(genre)%>%
+  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE), mean_review = mean(review_score, na.rm = TRUE)) %>% 
+  filter(!genre=="fi") %>% 
+  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>%
+  arrange(desc(box_movie)) %>% 
+  datatable()
 
 movie_with_boxoffice %>% 
   mutate(genre = as.character(genre)) %>% 
@@ -152,32 +189,44 @@ movie_with_boxoffice %>%
   summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
   filter(!genre=="fi") %>% 
   mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>% 
-  arrange(desc(box_movie)) %>% 
-  plot_ly(., x = ~genre,  y = ~box_movie, color = ~genre, type = "bar")
+  mutate(genre = fct_reorder(genre, box_movie)) %>% 
+  plot_ly(., x = ~genre,  y = ~box_movie, color = ~genre, type = "bar") %>% 
+   layout(title = 'Total Movie Box Office For Each Movie Type',
+         xaxis = list(title =""),
+         yaxis = list(title ="total movie box office"))
 
 ##range 
 ```
 
 ```{r}
-##Actor/Actress:  The top 10 ranked actor/actress with best box-office
+##Actor/Actress:  The top ranked actor/actress with best box-office
 movie_with_boxoffice %>% 
   gather(key = actor, value = main_actor, actor1:actor4) %>% 
   group_by(main_actor) %>%
   summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
-  head(10) %>% 
   datatable()
 ```
 
 ```{r}
-##Production company:  The top 10 ranked production company  with best box-office
+##Production company:  The top ranked production company  with best box-office
 movie_with_boxoffice %>% 
   group_by(studio) %>%
   na.omit() %>% 
   summarize(box_movie = sum(total_gross_millions,na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
-  head(10) %>% 
   datatable()
+
+movie_with_boxoffice %>% 
+  group_by(studio) %>%
+  na.omit() %>% 
+  summarize(box_movie = sum(total_gross_millions,na.rm = TRUE)) %>% 
+  mutate(studio = fct_reorder(studio, box_movie)) %>% 
+  plot_ly(., x = ~studio,  y = ~box_movie, color = ~studio, type = "bar") %>% 
+   layout(title = 'Total Movie Box Office For Each Studio',
+         xaxis = list(title =""),
+         yaxis = list(title ="total movie box office"))
+
 ```
 
 **Word Cloud for Movie Descriptions from 2006 to 2016**
@@ -230,8 +279,6 @@ dtm <- TermDocumentMatrix(docs)
 m <- as.matrix(dtm)
 v <- sort(rowSums(m),decreasing=TRUE)
 d <- data.frame(word = names(v),freq=v)
-
-
 
 set.seed(1)
 wordcloud(words = d$word, freq = d$freq, min.freq = 1,
