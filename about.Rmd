@@ -58,5 +58,14 @@ Movies have become a big part of everyday life worldwide and their popularity gr
 
 * **Results of Multiple linear regression model:** By using the ANOVA function, we can see that when put these four predictors into one regression mode, all of these four predictors are still statistically significant at 0.05 significance level. Then the best fitted coefficients estimate is obtained by using the lm function, which tells us how the total gross will change when one of the category presents or has certain values while holding other covariates constant.
 
+### Open gross as outcome
+
+* **Objective:** In this part of the analysis, we are specifically interested in open gross as the outcome. Moreover, we attempt to test whether review score, genre, actor, and director could be the predictors for the open gross. What's more, we use open gross as a predictor of total gross.
+    + **Multiple linear regression model:** From the hypothesis testing and analysis presented above, we know that rating ,genre and director are statistical significant predictors for the open gross. Then we try a multiple linear regression model with all these significant predictors included. Since we include both continuous and categorical predictors in the model, we need to use ANOVA table to test whether each of the predictor is statistically significant.
+
+
+***
+
+* **Results of Multiple linear regression model:**  +  Finally, I fit a overall linear regression between open gross and review score, rating, total gross millions.The regression model is open_gross = 36.44 -0.23review_score - 3.49rating + 0.30total_gross_millions.
 
 ## Discussion:
