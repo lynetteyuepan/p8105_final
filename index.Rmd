@@ -96,10 +96,10 @@ wordcloud(words = d$word, freq = d$freq, min.freq = 1,
 > Exploratory analyasis:
 
 * We make plots for: 
-    + top 10 ranked director  with best box-officehe 
-    + top 10 ranked type of movies with best box-office
-    + top 10 ranked actor/actress with best box-office
-    + top 10 ranked production company with best box-office
+
+    + Distribution of movie genre
+    + The top ranked type of movies with best box-office
+    + The top ranked production company with best box-office
   
   
 > Additional analysis:
