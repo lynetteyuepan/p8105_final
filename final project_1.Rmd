@@ -3,7 +3,7 @@ title: "final project"
 output: html_document
 ---
 
-```{r results='hide', message=FALSE, warning=FALSE}
+```{r results='hide', message=FALSE, warning=FALSE,echo=FALSE}
 library(dplyr)
 library(tidyverse)
 library(httr)
@@ -21,7 +21,7 @@ library(plotly)
 ```
 
 # Prepare datasets
-```{r data_prepare, include=FALSE}
+```{r data_prepare, include=FALSE,warning=FALSE,echo=FALSE}
 # read IMDB data from Kaggle
 movie = read.csv("./data/IMDB-Movie-Data.csv")
 
@@ -93,7 +93,7 @@ movie_with_boxoffice = movie_with_boxoffice %>%
   separate(genre_sep, into = c("genre1", "genre2", "genre3"), sep = ",")
 ```
 
-```{r}
+```{r warning=FALSE,echo=FALSE}
 ##Top ranked movies with best box-office 
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
@@ -102,7 +102,7 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
-```{r}
+```{r warning=FALSE,echo=FALSE}
 ##Top ranked movies with best review_score
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
@@ -111,7 +111,7 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
-```{r}
+```{r warning=FALSE,echo=FALSE}
 ##Top ranked movies with best rating
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
@@ -120,7 +120,7 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
-```{r}
+```{r warning=FALSE,echo=FALSE}
 ##Top ranked movies with highest votes 
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
@@ -129,7 +129,7 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
-```{r}
+```{r warning=FALSE,echo=FALSE}
 ##Top ranked movies with longest runtime 
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
@@ -138,7 +138,7 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
-```{r}
+```{r warning=FALSE,echo=FALSE}
 ## Distribution of movie genre 
 ##Donut charts represent genre 
 movie_with_boxoffice %>% 
@@ -159,7 +159,7 @@ movie_with_boxoffice %>%
 ```
 
 
-```{r}
+```{r warning=FALSE,echo=FALSE}
 ##Director:  The top ranked director with best box-office
 movie_with_boxoffice %>% 
   group_by(director) %>% 
@@ -168,7 +168,7 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
-```{r}
+```{r warning=FALSE,echo=FALSE}
 ##Type: The top ranked type of movies with best box-office
 movie_with_boxoffice %>% 
   mutate(genre = as.character(genre)) %>% 
@@ -198,7 +198,7 @@ movie_with_boxoffice %>%
 ##range 
 ```
 
-```{r}
+```{r warning=FALSE,echo=FALSE}
 ##Actor/Actress:  The top ranked actor/actress with best box-office
 movie_with_boxoffice %>% 
   gather(key = actor, value = main_actor, actor1:actor4) %>% 
@@ -208,7 +208,7 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
-```{r}
+```{r warning=FALSE,echo=FALSE}
 ##Production company:  The top ranked production company  with best box-office
 movie_with_boxoffice %>% 
   group_by(studio) %>%
@@ -230,7 +230,7 @@ movie_with_boxoffice %>%
 ```
 
 **Word Cloud for Movie Descriptions from 2006 to 2016**
-```{r echo = FALSE, fig.align='center', warning=FALSE, message=FALSE}
+```{r echo = FALSE, fig.align='center', warning=FALSE, message=FALSE,echo=FALSE}
 # Install
 # install.packages("tm")  # for text mining
 # install.packages("SnowballC") # for text stemming
