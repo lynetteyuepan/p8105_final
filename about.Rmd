@@ -4,32 +4,59 @@ author: "Lynette, Jingxuan, Manqi, Yixi"
 date: "12/06/2017"
 output: 
   html_document:
-    code_folding: hide
     toc: true
     toc_float: true
 ---
 
+
 ## Introduction: 
 
 Movies have become a big part of everyday life worldwide and their popularity grow with time. In this project, we intend to explore the explanatory factors for the total gross, review scores and opening gross of movies that were released in North America from 2006 to 2016. We attempt to use linear regression model for each of three interested outcomes including total gross, review scores (metacritic review score) and opening gross. Our goal of analysis is to look into the relationship between a variable such as genre, actors/actresses, production company, director and review scores and each of our interested outcome variables. Mainly, there are three outcomes including total gross, review scores (metacritic review score) and opening gross that we are interested in for each movie in North America that was released from 2006 to 2016. 
+
 ## Data and methods:
 * **Data source:**
-* Domestic Box office: (http://www.boxofficemojo.com/yearly/chart/?yr=2014&view=releasedate&view2=domestic&sort=gross&order=DESC&&p=.htm) (Only use movies with total sales that ranked top 100)
-* 06-16 movie: https://www.kaggle.com/PromptCloudHQ/imdb-data
+    + [Domestic Box office:](http://www.boxofficemojo.com/yearly/chart/?yr=2014&view=releasedate&view2=domestic&sort=gross&order=DESC&&p=.htm) (Only use movies with total sales that ranked top 100)
+    + [06-16 movie:](https://www.kaggle.com/PromptCloudHQ/imdb-data)
+
 * **Data Description:** 
-* The box office data was obtained by using a for-loop that scraped movies with total sales that ranked top 100 in each year from 2006 to 2016, resulting in a data frame containing 1100 rows and five variables: movie titles, studio, total gross, opening gross and released year.
-* The movie dataset includes 1,000 most popular movies on IMDB (http://www.imdb.com/) from 2006 to 2016. The data points included are: Title, Genre, Description, Director, Actors, Year, Runtime, Rating, Votes, Revenue, Metascore for each movie. 
+    + The box office data was obtained by using a for-loop that scraped movies with total sales that ranked top 100 in each year from 2006 to 2016, resulting in a data frame containing 1100 rows and five variables: movie titles, studio, total gross, opening gross and released year.
+    + The movie dataset includes 1,000 most popular movies on IMDB (http://www.imdb.com/) from 2006 to 2016. The data points included are: Title, Genre, Description, Director, Actors, Year, Runtime, Rating, Votes, Revenue, Metascore for each movie. 
+
 * **Data cleaning and scraping:**
-* Firstly, we wrote a for-loop to scape the box office dataset from the online source which includes movies with total box office that ranked top 100 in each year from 2006 to 2016. After we changed the names of box office dataset for consistency, we joined the box office dataset with the movie dataset obtained from kaggle by the movie names. 
-* Next, we cleaned our combined dataset. We decided to keep the total gross column and replaced NA in total gross with the values in Revenue column in movie dataset. Also, we divided the total gross by 10^6 to reduce the number of zeros in that column. Furthermore, we separated the actor column into four new columns for later analysis purpose.
+    + Firstly, we wrote a for-loop to scape the box office dataset from the online source which includes movies with total box office that ranked top 100 in each year from 2006 to 2016. After we changed the names of box office dataset for consistency, we joined the box office dataset with the movie dataset obtained from kaggle by the movie names. 
+    + Next, we cleaned our combined dataset. We decided to keep the total gross column and replaced NA in total gross with the values in Revenue column in movie dataset. Also, we divided the total gross by 10^6 to reduce the number of zeros in that column. Furthermore, we separated the actor column into four new columns for later analysis purpose.
+
 * **Statistical analysis:**
-* In this project, we mainly interested in analyzing the relationship between explanatory variable and outcome using linear regression model, specifically simple linear regression. Specifically, we hypothesized that there is a linear relationship between th explanatory variable(s) and outcome. Simple linear regression is a statistical method that allows us to summarize and study relationships between two variables. Multiple linear regression is also one type of linear regression model and contains more than one explanatory variables. Both simple linear regression and multiple linear regression are used to explore the relationship between predictor variable(s) and the interested outcome. 
-* lm function is used to fit a linear regression model to the interested explanatory variable(s) and dependent outcome. For simplicity, we used the P value (Pr>|t|) in each summarized lm() output to draw conclusion about whether the variable is significant predictor of the outcome. Commonly, we used 0.05 significance level to make conclusions. Moreover, lm function gives us the estimated coefficients (slope) for the linear model, which can used to predict how the outcome will change in response to the increase of the predictor.
-* ANOVA is used when the explanatory variable has different levels/categories. Firstly, we used the ANOVA function to determine whether the variable as a whole is a significant predictor. Then we can explore the estimated coefficient for each level of that variable by using lm function. The estimated coefficient indicate how the outcome will change in response to the presence of a certain level/category of the predictor. 
+    + In this project, we mainly interested in analyzing the relationship between explanatory variable and outcome using linear regression model, specifically simple linear regression. Specifically, we hypothesized that there is a linear relationship between th explanatory variable(s) and outcome. Simple linear regression is a statistical method that allows us to summarize and study relationships between two variables. Multiple linear regression is also one type of linear regression model and contains more than one explanatory variables. Both simple linear regression and multiple linear regression are used to explore the relationship between predictor variable(s) and the interested outcome. 
+    + lm function is used to fit a linear regression model to the interested explanatory variable(s) and dependent outcome. For simplicity, we used the P value (Pr>|t|) in each summarized lm() output to draw conclusion about whether the variable is significant predictor of the outcome. Commonly, we used 0.05 significance level to make conclusions. Moreover, lm function gives us the estimated coefficients (slope) for the linear model, which can used to predict how the outcome will change in response to the increase of the predictor.
+    + ANOVA is used when the explanatory variable has different levels/categories. Firstly, we used the ANOVA function to determine whether the variable as a whole is a significant predictor. Then we can explore the estimated coefficient for each level of that variable by using lm function. The estimated coefficient indicate how the outcome will change in response to the presence of a certain level/category of the predictor. 
 
 
 ## Results:
 
+### Total gross as outcome
+
+* **Objective:** In this part of the analysis, we are specifically interested in total gross as the outcome. Moreover, we attempt to test whether review score, genre, actor, director and production company could be the predictors for the total gross (movies without total gross are omitted).
+    + **Multiple linear regression model:** From the hypothesis testing and analysis presented above, we know that production company, director and review scores are statistical significant predictors for the total gross. Then we try a multiple linear regression model with all these significant predictors included. Since we include both continuous and categorical predictors in the model, we need to use ANOVA table to test whether each of the predictor is statistically significant.
+
+***
+
+* **Results:**
+
+    + **Review score:** At 0.05 significance level, we can say that there is a linear association between total gross and review scores. The best fitting linear line is $y = 34.04 + 0.85x$. For every one score increase in metascore, we expected the increase of total gross to be 0.85 (in millions).
+
+    + **Genre:** At 0.001 significance level, we can say that genre is a significant predictor of the total box office. Then the estimated coefficient for each genre is given in the data table, which shows us how the total gross will change when the movie falls into one of the genres.
+
+    + **Director:** At 0.001 significance level, we can say that director is a significant predictor of the total box office. Then the estimated coefficient for each director is given in the data table, which shows us how the total gross will change related to the director of the movie. 
+
+    + **Actors/actresses:** At 0.05 significance level, we fail to conclude the linear association since actor/actress is not a significant predictor of the total gross. 
+
+    + **Production company:** At 0.001 significance level, we can conclude that production company is a significant predictor of the total box office. Then the estimated coefficient for each production company is given in the data table, which shows us how the total gross will change related to the production company of the movie. 
+
+
+***
+
+* **Results of Multiple linear regression model:** By using the ANOVA function, we can see that when put these four predictors into one regression mode, all of these four predictors are still statistically significant at 0.05 significance level. Then the best fitted coefficients estimate is obtained by using the lm function, which tells us how the total gross will change when one of the category presents or has certain values while holding other covariates constant.
 
 
 ## Discussion:
