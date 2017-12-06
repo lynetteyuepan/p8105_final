@@ -221,7 +221,7 @@ movie_with_boxoffice %>%
          yaxis = list(title ="total movie box office"))
 ```
 
-**Comment**From two plots and datatable above, we found out that,during 2006 to 2016, drama movie is the most common movie type, and adventure movie has the best total movie box, histroy moive has the best mean review score. 
+**Comment**: From two plots and datatable above, we found out that,during 2006 to 2016, drama movie is the most common movie type, and adventure movie has the best total movie box, histroy moive has the best mean review score. 
 
 ###Actor/Actress:  The top ranked actor/actress with best box-office
 
