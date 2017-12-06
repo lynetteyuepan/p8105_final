@@ -110,13 +110,15 @@ movie_with_boxoffice= movie_with_boxoffice %>%
 # visualize the linear regression 
 movie_with_boxoffice %>% 
   ggplot(aes(x= review_score, y = total_gross_millions)) +
-  geom_point(alpha = .5) 
+  geom_point(alpha = .5)+
+  labs(title = "Scatterplot showing the relationship between total gross and review score")
+
 
 # fit linear regression for total gross and review score
 lm(total_gross_millions ~ review_score, data = movie_with_boxoffice) %>% 
   summary() %>% 
   broom::tidy() %>% 
-  DT::datatable()
+  DT::datatable(class = 'cell-border stripe')
 ```
 **Comment:** Looking at the scatterplot of the total gross vs. review scores, we can see that there may be a linear relationship between total gross and review scores. Here, we use the lm function to find the best fitting linear relationship between total gross and review scores. At 0.05 significance level, we can say that there is a linear association between total gross and review scores. The best fitting linear line is $y = 34.04 + 0.85x$. For every one score increase in metascore, we expected the increase of total gross to be 0.85 (in millions).
 
@@ -125,7 +127,8 @@ lm(total_gross_millions ~ review_score, data = movie_with_boxoffice) %>%
 movie_with_boxoffice %>% 
   ggplot(aes(x= review_score, y = total_gross_millions)) +
   geom_point(alpha = .5) +
-  stat_smooth(method = "lm") 
+  stat_smooth(method = "lm")+
+  labs(title = "Scatterplot showing the relationship between total gross and review score")
 
 ```
 
@@ -155,7 +158,7 @@ anova(lm(total_gross_millions ~ genre, data = movie_boxoffice_genre)) %>%
 lm(total_gross_millions ~ genre, data = movie_boxoffice_genre) %>% 
   summary() %>% 
   broom::tidy() %>% 
-  DT::datatable()
+  DT::datatable(class = 'cell-border stripe')
 ```
 **Comment:**  We hypothesize that there is a linear relationship between total gross and genre. Here, we use the ANOVA function to test the hypothesis and see if genre is a significant predictor of the total box office. At 0.001 significance level, we can say that genre is a significant predictor of the total box office. Then the estimated coefficient for each genre is given in the data table, which shows us how the total gross will change when the movie falls into one of the genres.
 
@@ -163,7 +166,7 @@ lm(total_gross_millions ~ genre, data = movie_boxoffice_genre) %>%
 # visualize the relationship between total gross and genre
 movie_boxoffice_genre %>% 
   plotly::plot_ly(., x= ~factor(genre), y = ~total_gross_millions, color = ~genre, type = "box") %>% 
-  layout(xaxis = list(title=" "), yaxis = list(title="total gross in millions"))
+  layout(xaxis = list(title=" "), yaxis = list(title="total gross in millions"), title = "Boxplot showing the total gross of movies associated with each genre")
 
 
 ```
@@ -181,14 +184,14 @@ set.seed(1)
 # check if director is a significant predictor
 anova(lm(total_gross_millions ~ director, data = movie_with_boxoffice)) %>% 
   broom::tidy() %>% 
-  DT::datatable()
+  DT::datatable(class = 'cell-border stripe')
 ## significant
 
 # fit linear regression for each director
 lm(total_gross_millions ~ director, data = movie_with_boxoffice) %>% 
   summary() %>% 
   broom::tidy() %>% 
-  DT::datatable()
+  DT::datatable(class = 'cell-border stripe')
 ```
 
 **Comment:** We hypothesize that there is a simple linear relationship between total gross and director. Here, we use the ANOVA function to test the hypothesis and see if director is a significant predictor of the total box office. At 0.001 significance level, we can say that director is a significant predictor of the total box office. Then the estimated coefficient for each director is given in the data table, which shows us how the total gross will change related to the director of the movie. 
@@ -198,7 +201,7 @@ lm(total_gross_millions ~ director, data = movie_with_boxoffice) %>%
 
 movie_with_boxoffice %>% 
   plot_ly(x = ~director,  y = ~total_gross_millions, color = ~director, type = "box") %>% 
-  layout(xaxis = list(title=" "), yaxis = list(title="total gross in millions"), showlegend = FALSE)
+  layout(xaxis = list(title=" "), yaxis = list(title="total gross in millions"), title = "Boxplot showing the total gross of movies associated with each director", showlegend = FALSE)
 
 ```
 
@@ -220,7 +223,7 @@ total_gross_actor_sep=
 # check if actor/actress is a significant predictor
 anova(lm(total_gross_millions ~ main_actors, data = total_gross_actor_sep)) %>% 
   broom::tidy() %>% 
-  DT::datatable()
+  DT::datatable(class = 'cell-border stripe')
 ## not significant
 ```
 **Comment:** We hypothesize that there is a simple linear relationship between total gross and actors/actresses. Here, we use the ANOVA function to test the hypothesis and see if actor/actress is a significant predictor of the total gross. At 0.05 significance level, we fail to conclude the linear association since actor/actress is not a significant predictor of the total gross.
@@ -230,7 +233,7 @@ anova(lm(total_gross_millions ~ main_actors, data = total_gross_actor_sep)) %>%
 
 total_gross_actor_sep %>% 
   plot_ly(y = ~main_actors,  x = ~total_gross_millions, color = ~main_actors, type = "box") %>% 
-  layout(yaxis = list(title=" "), xaxis = list(title="total gross in millions"), showlegend = FALSE)
+  layout(yaxis = list(title=" "), xaxis = list(title="total gross in millions"), title = "Boxplot showing the total gross of movies associated with each actors/actresses", showlegend = FALSE)
 
 ```
 
@@ -252,7 +255,7 @@ movie_total_gross_studio = movie_with_boxoffice %>%
 # check if production company is a significant predictor
 anova(lm(total_gross_millions ~ studio, data = movie_total_gross_studio)) %>% 
   broom::tidy() %>% 
-  DT::datatable()
+  DT::datatable(class = 'cell-border stripe')
 
 ## significant
 
@@ -260,16 +263,16 @@ anova(lm(total_gross_millions ~ studio, data = movie_total_gross_studio)) %>%
 lm(total_gross_millions ~ studio, data = movie_total_gross_studio) %>% 
   summary() %>% 
   broom::tidy() %>% 
-  DT::datatable()
+  DT::datatable(class = 'cell-border stripe')
 ```
 **Comment:** We hypothesize that there is a simple linear relationship between total gross and actors/actresses. Here, we use the ANOVA function to test the hypothesis and see if actor/actress is a significant predictor of the total gross. At 0.001 significance level, we can conclude that production company is a significant predictor of the total box office. Then the estimated coefficient for each production company is given in the data table, which shows us how the total gross will change related to the production company of the movie. 
 
 ```{r, warning=FALSE, fig.align='center'}
-# visualize the relationship between total gross and 
+# visualize the relationship between total gross and production company
 
 movie_total_gross_studio %>% 
   plot_ly(x = ~studio,  y = ~total_gross_millions, color = ~studio, type = "box") %>% 
-  layout(xaxis = list(title="Production company"), yaxis = list(title="total gross in millions"))
+  layout(xaxis = list(title="Production company"), yaxis = list(title="total gross in millions"), title = "Boxplot showing the total gross of movies associated with each production company")
 ```
 **Comment:** Then the box plot of the total gross for each production company shows us some production companies' mean total movie sales are significantly higher compared to that of the other studios. For example, Sony has substantially higher mean total movie sales than than of SPC. 
 
@@ -292,14 +295,14 @@ movie_MLR= movie_with_boxoffice %>%
 # see if all predictors are significant in MLR:
 anova(lm(total_gross_millions ~ director + studio + review_score + genre, data = movie_MLR)) %>% 
   broom::tidy() %>% 
-  DT::datatable()
+  DT::datatable(class = 'cell-border stripe')
 
 
 # fit s MLR model:
 lm(total_gross_millions ~ director + studio + review_score + genre, data = movie_MLR) %>% 
   summary() %>% 
   broom::tidy() %>% 
-  DT::datatable()
+  DT::datatable(class = 'cell-border stripe')
 ```
 
 **Comment:** By using the ANOVA function, we can see that when put these four predictors into one regression mode, all of these four predictors are still statistically significant at 0.05 significance level. Then the best fitted coefficients estimate is obtained by using the lm function, which tells us how the total gross will change when one of the variable presents or has certain values while holding other covariates constant.
