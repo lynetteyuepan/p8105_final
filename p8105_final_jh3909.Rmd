@@ -3,11 +3,11 @@ title: "p8105_final_jh3909"
 
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r packages, include=FALSE}
+```{r packages, include=FALSE, echo=FALSE, warning=FALSE}
 library(dplyr)
 library(tidyverse)
 library(httr)
@@ -18,10 +18,11 @@ library(ggplot2)
 library(hexbin)
 library(plotly)
 library(knitr)
+library(DT)
 ```
 
 # Prepare datasets
-```{r data_prepare, include=FALSE}
+```{r data_prepare, include=FALSE, echo=FALSE, warning=FALSE}
 # read IMDB data from Kaggle
 movie = read.csv("./data/IMDB-Movie-Data.csv")
 
@@ -61,7 +62,7 @@ boxoffice = bind_rows(boxoffice, box_office_year)
 }
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE}
 set.seed(1)
 # renmae the movie_title in movie dataset in order to join two datasets
 movie_rename= movie %>% 
@@ -97,19 +98,17 @@ movie_with_boxoffice = movie_with_boxoffice %>%
 
 ```
 
-<<<<<<< HEAD
 
-
-=======
 ----------------------------------------------------------------------------------------------------------------------------
   
->>>>>>> e4baa1e93436cf1a44a16fe468217e409564ae4d
 # Jingxuan' s code:
+
   
 ## For review scores, can box office/genre/actor/director be indicators?
+
   
 ### Can box office be the indicator of review scores?
-```{r}
+```{r, echo=FALSE, warning=FALSE}
 set.seed(1)
 
 movie_with_review_narm = 
@@ -118,7 +117,9 @@ movie_with_review_narm =
 
 # fit linear regression for review scoreand total gross
 lm(review_score ~ total_gross_millions , data = movie_with_review_narm) %>% 
-  summary() 
+  summary() %>%
+  broom::tidy() %>%
+  datatable()
 ### significant
 
 movie_with_review_narm %>% 
@@ -132,12 +133,15 @@ movie_with_review_narm %>%
 * We can see that the positive association between review scores and boxoffice is significant. With every million increase in boxoffice, the expected review score will increase by 0.023 on average.
 
 
+
 ### Can genere be the indicator of review scores?
-```{r}
+```{r, echo=FALSE, warning=FALSE}
 set.seed(1)
 
 # check if genre is a significant predictor
-anova(lm(review_score ~ genre, data = movie_with_review_narm))
+anova(lm(review_score ~ genre, data = movie_with_review_narm)) %>%
+  broom::tidy() %>%
+  datatable()
 ### significant
 
 # fit linear regression for significant genre predictor
@@ -150,28 +154,39 @@ movie_with_review_narm %>%
   lm(review_score ~ genre, .) %>% 
   broom::tidy() %>%
   filter(p.value < 0.05) %>%
-  arrange(desc(estimate))
+  arrange(desc(estimate)) %>%
+  datatable()
 
 # visualize the relationship between total gross and 
 
-movie_with_review_narm %>% 
+movie_with_review_narm %>%
+  mutate(genre = as.character(genre)) %>% 
+  tidytext::unnest_tokens(word, genre) %>% 
+  mutate(genre = word) %>% 
+  filter(!genre=="fi") %>% 
+  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>% 
   plot_ly(., x = ~genre,  y = ~review_score, color = ~genre, type = "box")
 ```
 
 
+
 ### Can director be the indicator of review scores?
-```{r}
+```{r, echo=FALSE, warning=FALSE}
 set.seed(1)
 
-# check if genre is a significant predictor
-anova(lm(review_score ~ director, data = movie_with_review_narm))
+# check if director is a significant predictor
+
+anova(lm(review_score ~ director, data = movie_with_review_narm)) %>%
+  broom::tidy() %>%
+  datatable()
 ## significant
 
 # fit linear regression for significant director predictor
 lm(review_score ~ director, data = movie_with_review_narm) %>% 
   broom::tidy() %>%
   filter(p.value < 0.05) %>%
-  arrange(desc(estimate))
+  arrange(desc(estimate)) %>%
+  datatable()
 
 # visualize the relationship between total gross and 
 
@@ -182,8 +197,12 @@ movie_with_review_narm %>%
 
 **Fun Finding! :**
 
+*  Directors with top three high review scores are Barry Jenkins, Kenneth Lonergan and Todd Haynes. They directed Moonlight, Manchester by the Sea and Carol respectively, which are all movies with good reputation and been nominated by Oscar. It's not hard to think they have high review score! :)
+
+
+
 ### Can actor be the indicator of review scores?
-```{r}
+```{r, echo=FALSE, warning=FALSE}
 set.seed(1)
 
 # separate the actors in actor column into four columns; then use gather function in order to do the anova test.
@@ -192,9 +211,17 @@ review_score_actor_sep=
   gather(., key = "num_actor", value = "main_actors", actor1:actor4)
 
 # check if actor is a significant predictor
-anova(lm(review_score ~ main_actors, data = review_score_actor_sep))
+anova(lm(review_score ~ main_actors, data = review_score_actor_sep)) %>%
+  broom::tidy() %>%
+  datatable()
 ## significant
 
+# fit linear regression for significant director predictor
+lm(review_score ~ main_actors, data = review_score_actor_sep) %>% 
+  broom::tidy() %>%
+  filter(p.value < 0.05) %>%
+  arrange(desc(estimate)) %>%
+  datatable()
 
 # visualize the relationship between total gross and 
 
@@ -203,20 +230,35 @@ review_score_actor_sep %>%
   layout(showlegend = FALSE)
 ```
 
+**Comment:**
+
+* Actors with top review scores mostly participated in good reputation movies like Boyhood, Moonlight. However, some of actors only have one movie in dataset, so that they might not be a accurate predictor for the review scores.
+
+
+
 ### Can studio be the indicator of review scores?
-```{r}
+```{r, echo=FALSE, warning=FALSE}
 set.seed(1)
 
 # check if studio is a significant predictor
-anova(lm(review_score ~ studio, data = movie_with_review_narm))
+anova(lm(review_score ~ studio, data = movie_with_review_narm)) %>%
+  broom::tidy() %>%
+  datatable()
 ### significant
 
 # fit linear regression for significant genre predictor
 lm(review_score ~ studio, data = movie_with_review_narm) %>% 
-  broom::tidy() 
+  broom::tidy() %>%
+  filter(p.value < 0.05) %>%
+  arrange(desc(estimate)) %>%
+  datatable()
 
 # visualize the relationship between total gross and 
 
 movie_with_review_narm %>% 
   plot_ly(., x = ~genre,  y = ~review_score, color = ~studio, type = "box")
 ```
+
+**Fun Finding! :**
+
+*  It is surprising that top film studios like Warner Bros and Universal Studio have are negatively associated with review score, which means if the film is made by these film, it may have a lower review score! The reason behind this phenomenon may be top studios produce hundreds of movie each year and not all of them got good reputaion, which lower the eastimate of review scores.

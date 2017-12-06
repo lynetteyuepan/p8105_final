@@ -86,11 +86,11 @@ wordcloud(words = d$word, freq = d$freq, min.freq = 1,
 * Data Source:
     + [Box office](http://www.boxofficemojo.com/yearly/chart/?yr=2014&view=releasedate&view2=domestic&sort=gross&order=DESC&&p=.htm) 
     + [06-16 movie](https://www.kaggle.com/PromptCloudHQ/imdb-data)
-    + [The Academy Awards](https://www.kaggle.com/theacademy/academy-awards)
+
   
   
 * Scapring process & cleaning:
-    + Firstly, we use the 06-16 movie dataset from kaggle and scrape the box office data from a [online recourse]((http://www.boxofficemojo.com/yearly/chart/?yr=2014&view=releasedate&view2=domestic&sort=gross&order=DESC&&p=.htm)).
+    + Firstly, we use the 06-16 movie dataset from kaggle and scrape the box office data from a [online source]((http://www.boxofficemojo.com/yearly/chart/?yr=2014&view=releasedate&view2=domestic&sort=gross&order=DESC&&p=.htm)).
     + For the cleaning of the scraped data, we wrote a function to loop through urls that contains box office data from 2006 to 2016. We extracted the data table and formated in the way that could be combined and joined with our dataset from kaggle.
 
 > Exploratory analyasis:

@@ -1,10 +1,15 @@
 ---
+<<<<<<< HEAD
 title: "P8105_final_mc4433"
 author: "Manqi Cai"
 output: 
   html_document:
     toc: true
     toc_float: true
+=======
+title: "p8105_final_mc4433"
+
+>>>>>>> master
 ---
 
 ```{r setup, include=FALSE}
@@ -27,7 +32,10 @@ library(hexbin)
 library(plotly)
 library(knitr)
 library(DT)
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 ```
 
 # Prepare datasets
