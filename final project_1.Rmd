@@ -97,7 +97,6 @@ movie_with_boxoffice = movie_with_boxoffice %>%
 ```
 
 
-
 ##Top ranked movies with best box-office 
 
 ```{r warning=FALSE}
@@ -108,8 +107,6 @@ movie_with_boxoffice %>%
   arrange(desc(box_movie)) %>% 
   datatable()
 ```
-
-
 
 ##Top ranked movies with best review_score
 
@@ -122,8 +119,6 @@ movie_with_boxoffice %>%
   datatable()
 ```
 
-
-
 ##Top ranked movies with best rating
 
 ```{r warning=FALSE}
@@ -134,8 +129,6 @@ movie_with_boxoffice %>%
   arrange(desc(rating)) %>% 
   datatable()
 ```
-
-
 
 ##Top ranked movies with highest votes 
 
@@ -163,7 +156,19 @@ movie_with_boxoffice %>%
 
 
 
-##Distribution of movie genre
+##Director:  The top ranked director with best box-office
+
+```{r warning=FALSE}
+##Director:  The top ranked director with best box-office
+movie_with_boxoffice %>% 
+  group_by(director) %>% 
+  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE), mean_review = mean(review_score, na.rm = TRUE)) %>% 
+  arrange(desc(box_movie)) %>% 
+  datatable()
+```
+
+##Genre of movie
+###Distribution of movie genre
 
 ```{r warning=FALSE}
 ## Distribution of movie genre 
@@ -186,21 +191,7 @@ movie_with_boxoffice %>%
 ```
 
 
-
-##Director:  The top ranked director with best box-office
-
-```{r warning=FALSE}
-##Director:  The top ranked director with best box-office
-movie_with_boxoffice %>% 
-  group_by(director) %>% 
-  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE), mean_review = mean(review_score, na.rm = TRUE)) %>% 
-  arrange(desc(box_movie)) %>% 
-  datatable()
-```
-
-
-
-##Type: The top ranked type of movies with best box-office
+###The top ranked type of movies with best box-office
 
 ```{r warning=FALSE}
 ##Type: The top ranked type of movies with best box-office
@@ -228,13 +219,11 @@ movie_with_boxoffice %>%
    layout(title = 'Total Movie Box Office For Each Movie Type',
          xaxis = list(title =""),
          yaxis = list(title ="total movie box office"))
-
-##range 
 ```
 
+**Comment**From two plots and datatable above, we found out that,during 2006 to 2016, drama movie is the most common movie type, and adventure movie has the best total movie box, histroy moive has the best mean review score. 
 
-
-##Actor/Actress:  The top ranked actor/actress with best box-office
+###Actor/Actress:  The top ranked actor/actress with best box-office
 
 ```{r warning=FALSE}
 ##Actor/Actress:  The top ranked actor/actress with best box-office
@@ -245,7 +234,6 @@ movie_with_boxoffice %>%
   arrange(desc(box_movie)) %>% 
   datatable()
 ```
-
 
 
 ##Production company:  The top ranked production company  with best box-office
@@ -272,7 +260,7 @@ movie_with_boxoffice %>%
 ```
 
 
-**Word Cloud for Movie Descriptions from 2006 to 2016**
+##Word Cloud for Movie Descriptions from 2006 to 2016
 ```{r echo = FALSE, fig.align='center', warning=FALSE, message=FALSE}
 # Install
 # install.packages("tm")  # for text mining
@@ -325,3 +313,6 @@ set.seed(1)
 wordcloud(words = d$word, freq = d$freq, min.freq = 1,
           max.words=200, random.order=FALSE, rot.per=0.35, 
           colors=brewer.pal(8, "Dark2"))
+```
+
+**Comment**: According to  word cloud for moive descripition, the most frequent words include young, life, world ,new.
