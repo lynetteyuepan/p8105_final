@@ -175,7 +175,11 @@ movie_with_review_narm %>%
   tidytext::unnest_tokens(word, genre) %>% 
   mutate(genre = word) %>% 
   filter(!genre=="fi") %>% 
-  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>% 
+  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>%
+  group_by(genre) %>%
+  mutate(score_median = median(review_score)) %>%
+  ungroup() %>%
+  mutate(genre = forcats::fct_reorder(genre, score_median)) %>%
   plot_ly(., x = ~genre,  y = ~review_score, color = ~genre, type = "box") %>% 
   layout(xaxis = list(title = ""))
 ```
@@ -281,7 +285,7 @@ lm(review_score ~ studio, data = movie_with_review_narm) %>%
 # visualize the relationship between total gross and 
 
 movie_with_review_narm %>% 
-  plot_ly(., x = ~genre,  y = ~review_score, color = ~studio, type = "box")
+  plot_ly(., x = ~studio,  y = ~review_score, color = ~studio, type = "box")
 ```
 
 **Fun Finding! :**
