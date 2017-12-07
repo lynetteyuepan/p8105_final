@@ -1,5 +1,5 @@
 ---
-title: "p8105_final_jh3909"
+title: "Review Scores"
 author: "Jingxuan He"
 output: 
   html_document:
@@ -7,6 +7,7 @@ output:
     toc: true
     toc_float: true
 ---
+
 
 ```{r setup, include=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -59,7 +60,7 @@ colnames(box_office_year)[6] = "opening"
 colnames(box_office_year)[7] = "theaters_opening"  
 
 box_office_year = box_office_year %>% 
-  select(movie_title, studio, total_gross, opening) %>% 
+  dplyr::select(movie_title, studio, total_gross, opening) %>% 
   .[3:102,] %>%
   mutate(year = 2005 + i)
     

@@ -1,5 +1,5 @@
 ---
-title: "p8105_final_mc4433"
+title: "Opening Gross"
 author: "Manqi Cai"
 output: 
   html_document:
