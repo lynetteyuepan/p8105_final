@@ -102,23 +102,24 @@ movie_with_boxoffice = movie_with_boxoffice %>%
   separate(genre_sep, into = c("genre1", "genre2", "genre3"), sep = ",")
 
 
-movie_with_review_narm = 
-  movie_with_boxoffice %>% 
-  filter(!is.na(review_score)) 
+
 ```
 
 
 
-## For review scores, can box office/genre/actor/director be indicators?
+
 
 
 ***
 
   
-### Can box office be the indicator of review scores?
+### Relationship between review score and box office
 ```{r, warning=FALSE}
 set.seed(1)
 
+movie_with_review_narm = 
+  movie_with_boxoffice %>% 
+  filter(!is.na(review_score)) 
 
 # fit linear regression for review scoreand total gross
 lm(review_score ~ total_gross_millions , data = movie_with_review_narm) %>% 
@@ -137,13 +138,14 @@ movie_with_review_narm %>%
 
 **Comment:**
 
-* We can see that the positive association between review scores and boxoffice is significant. With every million increase in boxoffice, the expected review score will increase by 0.023 on average.
+* We can say that the positive association between review scores and boxoffice is significant. With every million increase in boxoffice, the expected review score will increase by 0.023 on average.
 
 
 ***
 ***
 
-### Can genere be the indicator of review scores?
+
+### Relationship between review score and genre
 ```{r, warning=FALSE}
 set.seed(1)
 
@@ -186,7 +188,7 @@ movie_with_review_narm %>%
 ***
 ***
 
-### Can director be the indicator of review scores?
+### Relationship between review score and directors
 ```{r, warning=FALSE}
 set.seed(1)
 
@@ -221,7 +223,7 @@ movie_with_review_narm %>%
 ***
 
 
-### Can actor be the indicator of review scores?
+### Relaitonship between review score and actors
 ```{r, warning=FALSE}
 set.seed(1)
 
@@ -259,7 +261,7 @@ review_score_actor_sep %>%
 ***
 
 
-### Can studio be the indicator of review scores?
+### Relationship between review score and film studio
 ```{r,  warning=FALSE}
 set.seed(1)
 
@@ -285,3 +287,5 @@ movie_with_review_narm %>%
 **Fun Finding! :**
 
 *  It is surprising that top film studios like Warner Bros and Universal Studio have are negatively associated with review score, which means if the film is made by these film, it may have a lower review score! The reason behind this phenomenon may be top studios produce hundreds of movie each year and not all of them got good reputaion, which lower the eastimate of review scores.
+
+
