@@ -181,7 +181,7 @@ movie_with_review_narm %>%
   ungroup() %>%
   mutate(genre = forcats::fct_reorder(genre, score_median)) %>%
   plot_ly(., x = ~genre,  y = ~review_score, color = ~genre, type = "box") %>% 
-  layout(xaxis = list(title = ""))
+  layout(xaxis = list(title = ""), margin = list(b = 160))
 ```
 
 **Comment:**
@@ -213,8 +213,12 @@ lm(review_score ~ director, data = movie_with_review_narm) %>%
 # visualize the relationship between total gross and 
 
 movie_with_review_narm %>% 
+  group_by(director) %>%
+  mutate(score_median = median(review_score)) %>%
+  ungroup() %>%
+  mutate(director = forcats::fct_reorder(director, score_median)) %>%
   plot_ly(x = ~director,  y = ~review_score, color = ~director, type = "box") %>% 
-  layout(showlegend = FALSE)
+  layout(showlegend = FALSE, margin = list(b = 160))
 ```
 
 **Fun Finding! :**
@@ -252,8 +256,12 @@ lm(review_score ~ main_actors, data = review_score_actor_sep) %>%
 # visualize the relationship between total gross and 
 
 review_score_actor_sep %>% 
+  group_by(main_actors) %>%
+  mutate(score_median = median(review_score)) %>%
+  ungroup() %>%
+  mutate(main_actors = forcats::fct_reorder(main_actors, score_median)) %>%
   plot_ly(x = ~main_actors,  y = ~review_score, color = ~main_actors, type = "box") %>% 
-  layout(showlegend = FALSE)
+  layout(showlegend = FALSE, margin = list(b = 160))
 ```
 
 **Comment:**
@@ -285,7 +293,12 @@ lm(review_score ~ studio, data = movie_with_review_narm) %>%
 # visualize the relationship between total gross and 
 
 movie_with_review_narm %>% 
-  plot_ly(., x = ~studio,  y = ~review_score, color = ~studio, type = "box")
+  group_by(studio) %>%
+  mutate(score_median = median(review_score)) %>%
+  ungroup() %>%
+  mutate(studio = forcats::fct_reorder(studio, score_median)) %>%
+  plot_ly(., x = ~studio,  y = ~review_score, color = ~studio, type = "box") %>%
+  layout( margin = list(b = 160))
 ```
 
 **Fun Finding! :**
