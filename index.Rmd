@@ -1,6 +1,7 @@
 ---
 title: "Overview"
 ---
+
 **Word Cloud for Movie Names from 2006 to 2016**
 ```{r echo = FALSE, fig.align='center', warning=FALSE, message=FALSE}
 # Install
@@ -67,32 +68,17 @@ wordcloud(words = d$word, freq = d$freq, min.freq = 1,
   
 >  Overview of the project goals and motivation.:
 
-* In this project, we intend to explore the indicating factors of the total gross, review scores and opening gross for movies that were released in North America from 2006 to 2016.
-* Mainly, there are three outcomes that we are interested in including **total gross, review scores (metacritic review score) and opening gross** for each movie in North America that was released from 2006 to 2016.
-* Specifically, our exploratory analysis is based upon the 
-
-> Motivation
-
-* Our moviation is really intuitive and simple. Since our members are movie-lovers, we would like to know if there is any factors that could potential be significant predictor of the interested outcome.
+* Movies have become a big part of everyday life worldwide and their popularity grow with time. In this project, we intend to explore the explanatory factors for the total gross, review scores and opening gross of movies that were released in North America from 2006 to 2016. We attempt to use linear regression model for each of three interested outcomes including total gross, review scores (metacritic review score) and opening gross. Our goal of analysis is to look into the relationship between a variable such as genre, actors/actresses, production company, director and review scores and each of our interested outcome variables. Mainly, there are three outcomes including total gross, review scores (metacritic review score) and opening gross that we are interested in for each movie in North America that was released from 2006 to 2016.
 
 > Initial questions and New Questions:
 
-* At the beginning of our project, we intend to explore the relationship between review score , genre, actor, director and each of interested outcome, namely **total gross, review scores (metacritic review score) and opening gross**.
+* At the beginning of our project, we intend to explore the relationship between review score, genre, actor, director and each of interested outcome, namely **total gross, review scores (metacritic review score) and opening gross** using linear Regression model.
 
-* As the project progressed, we found that some of factors may be a significant predictor, whereas different levels within that factor may not be statistically significant. 
-
-> Data
+> Data 
 
 * Data Source:
     + [Box office](http://www.boxofficemojo.com/yearly/chart/?yr=2014&view=releasedate&view2=domestic&sort=gross&order=DESC&&p=.htm) 
     + [06-16 movie](https://www.kaggle.com/PromptCloudHQ/imdb-data)
-
-  
-  
-* Scapring process & cleaning:
-    + Firstly, we use the 06-16 movie dataset from kaggle and scrape the box office data from a [online source]((http://www.boxofficemojo.com/yearly/chart/?yr=2014&view=releasedate&view2=domestic&sort=gross&order=DESC&&p=.htm)).
-    + For the cleaning of the scraped data, we wrote a function to loop through urls that contains box office data from 2006 to 2016. We extracted the data table and formated in the way that could be combined and joined with our dataset from kaggle.
-
 > Exploratory analyasis:
 
 * We make plots for: 
@@ -102,18 +88,11 @@ wordcloud(words = d$word, freq = d$freq, min.freq = 1,
     + The top ranked production company with best box-office
   
   
-> Additional analysis:
+> Summary of Analysis:
 
 * We use lm function and anova function to test if the factor that we are tested is a statistical significant predictor of the interested outcome.
 
-* If the predictor is contious, we will fit a linear regression line to the data; if the predictor is categorical and contains many levels, we will use plotly to display the difference among the levels of the predictor with regard to the interested outcome.
-
-> Discussion
-
-* For the total gross, 
-    + There is a linear relationship between total gross (outcome) and review score (predictor). 
-    + Director is a significant predictor of total gross.
-    + Actor is not a significant predictor of total gross.
+* If the predictor is continous, we will fit a linear regression line to the data; if the predictor is categorical and contains many levels, we will use ANOVA function to check if the variable of interest is actually significant predictor.
   
   
   

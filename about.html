@@ -17,7 +17,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/simplex.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -27,6 +27,7 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -102,34 +103,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 60px;
+  padding-top: 41px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 
 .section h2 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 .section h3 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 .section h4 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 .section h5 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 .section h6 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 </style>
 
@@ -271,21 +272,21 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Exploration of North American Box-office Indicating Factors (2006-2016)</a>
+      <a class="navbar-brand" href="index.html">Exploration of North American Box-office</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="index.html">Overview</a>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li>
   <a href="about.html">Report</a>
 </li>
 <li>
-  <a href="final_project_1.html">Exploration and Visualization</a>
+  <a href="final_project_1.html">Visualization</a>
 </li>
 <li>
   <a href="p8105_final.html">Total Gross</a>
@@ -296,6 +297,9 @@ div.tocify {
 <li>
   <a href="p8105_final_mc4433.html">Opening gross</a>
 </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -387,16 +391,20 @@ div.tocify {
 <ul>
 <li><strong>Multiple linear regression model:</strong> From the hypothesis testing and analysis presented above, we know that rating ,genre and director are statistical significant predictors for the open gross. Then we try a multiple linear regression model with all these significant predictors included. Since we include both continuous and categorical predictors in the model, we need to use ANOVA table to test whether each of the predictor is statistically significant.</li>
 </ul></li>
-<li><strong>Results of Multiple linear regression model:</strong> + Finally, I fit a overall linear regression between open gross and review score, rating, total gross millions.The regression model is open_gross = 36.44 -0.23review_score - 3.49rating + 0.30total_gross_millions.</li>
+<li><strong>Results of Multiple linear regression model:</strong> Finally, I fit a overall linear regression between open gross and review score, rating, total gross millions.The regression model is open_gross = 36.44 -0.23review_score - 3.49rating + 0.30total_gross_millions.</li>
 </ul>
 </div>
 </div>
 <div id="discussion" class="section level2">
 <h2>Discussion:</h2>
+<ul>
+<li>When total gross is the interested outcome, review score, genre, director and production company are significantly predictors for the total gross, whereas actors/actresses are not significant predictors for the total gross. In the multiple linear regression model, review score, genre, director and production company are still statistically significant. This analysis provides the insight of how each potential explanatory factors relate to the total gross of movies, which can be further explore how to build the complex model to predict the total gross of movies.</li>
+</ul>
 <p><strong>Fun Finding! :</strong></p>
 <ul>
 <li><p>Directors with top three high review scores are Barry Jenkins, Kenneth Lonergan and Todd Haynes. They directed Moonlight, Manchester by the Sea and Carol respectively, which are all movies with good reputation and been nominated by Oscar. It’s not hard to think they have high review score! :)</p></li>
 <li><p>It is surprising that top film studios like Warner Bros and Universal Studio have are negatively associated with review score, which means if the film is made by these film, it may have a lower review score! The reason behind this phenomenon may be top studios produce hundreds of movie each year and not all of them got good reputaion, which lower the eastimate of review scores.</p></li>
+<li><p>Director with really high box office doesn’t always means that he directed good movies. Michael Bay, for example, ranked as 4th director with best box-office, whereas the mean review score of his movies is only 43.8, which is lowest among top 10 director with best box office.</p></li>
 </ul>
 </div>
 

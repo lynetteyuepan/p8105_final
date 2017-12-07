@@ -1,5 +1,5 @@
 ---
-title: "p8105_final"
+title: "Total gross"
 author: "Lynette Pan"
 output: 
   html_document:
@@ -7,6 +7,7 @@ output:
     toc: true
     toc_float: true
 ---
+
 
 **For box office, can review score, genre, actor, director and production company be the predictors?**
 
@@ -24,7 +25,7 @@ library(plotly)
 library(knitr)
 ```
 
-```{r data_prepare, warning=FALSE}
+```{r data_prepare, warning=FALSE, include=FALSE}
 # read IMDB data from Kaggle
 movie = read.csv("./data/IMDB-Movie-Data.csv")
 
@@ -56,7 +57,7 @@ colnames(box_office_year)[6] = "opening"
 colnames(box_office_year)[7] = "theaters_opening"  
 
 box_office_year = box_office_year %>% 
-  select(movie_title, studio, total_gross, opening) %>% 
+  dplyr::select(movie_title, studio, total_gross, opening) %>% 
   .[3:102,] %>%
   mutate(year = 2005 + i)
     
@@ -136,7 +137,7 @@ movie_with_boxoffice %>%
 
 ***
 
-## Relationship between total gross and genre?
+## Relationship between total gross and genre
 ```{r, warning=FALSE, fig.align='center'}
 set.seed(1)
 
@@ -176,7 +177,7 @@ movie_boxoffice_genre %>%
 
 ***
 
-## Relationship between total gross and director:
+## Relationship between total gross and director
 
 ```{r, warning=FALSE, fig.align='center'}
 set.seed(1)
@@ -210,7 +211,7 @@ movie_with_boxoffice %>%
 
 ***
 
-## Relationship between total gross and actors/actresses:
+## Relationship between total gross and actors/actresses
 
 ```{r warning=FALSE, fig.align='center'}
 set.seed(1)
@@ -244,7 +245,7 @@ total_gross_actor_sep %>%
 ***
 
 
-## Relationship between total gross and production company:
+## Relationship between total gross and production company
 
 ```{r warning=FALSE, fig.align='center'}
 set.seed(1)

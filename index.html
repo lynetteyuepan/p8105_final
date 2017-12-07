@@ -15,13 +15,14 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/simplex.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -97,34 +98,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 60px;
+  padding-top: 41px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 
 .section h2 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 .section h3 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 .section h4 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 .section h5 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 .section h6 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 46px;
+  margin-top: -46px;
 }
 </style>
 
@@ -171,21 +172,21 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Exploration of North American Box-office Indicating Factors (2006-2016)</a>
+      <a class="navbar-brand" href="index.html">Exploration of North American Box-office</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="index.html">Overview</a>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li>
   <a href="about.html">Report</a>
 </li>
 <li>
-  <a href="final_project_1.html">Exploration and Visualization</a>
+  <a href="final_project_1.html">Visualization</a>
 </li>
 <li>
   <a href="p8105_final.html">Total Gross</a>
@@ -196,6 +197,9 @@ $(document).ready(function () {
 <li>
   <a href="p8105_final_mc4433.html">Opening gross</a>
 </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -228,22 +232,13 @@ $(document).ready(function () {
 <p>Overview of the project goals and motivation.:</p>
 </blockquote>
 <ul>
-<li>In this project, we intend to explore the indicating factors of the total gross, review scores and opening gross for movies that were released in North America from 2006 to 2016.</li>
-<li>Mainly, there are three outcomes that we are interested in including <strong>total gross, review scores (metacritic review score) and opening gross</strong> for each movie in North America that was released from 2006 to 2016.</li>
-<li>Specifically, our exploratory analysis is based upon the</li>
-</ul>
-<blockquote>
-<p>Motivation</p>
-</blockquote>
-<ul>
-<li>Our moviation is really intuitive and simple. Since our members are movie-lovers, we would like to know if there is any factors that could potential be significant predictor of the interested outcome.</li>
+<li>Movies have become a big part of everyday life worldwide and their popularity grow with time. In this project, we intend to explore the explanatory factors for the total gross, review scores and opening gross of movies that were released in North America from 2006 to 2016. We attempt to use linear regression model for each of three interested outcomes including total gross, review scores (metacritic review score) and opening gross. Our goal of analysis is to look into the relationship between a variable such as genre, actors/actresses, production company, director and review scores and each of our interested outcome variables. Mainly, there are three outcomes including total gross, review scores (metacritic review score) and opening gross that we are interested in for each movie in North America that was released from 2006 to 2016.</li>
 </ul>
 <blockquote>
 <p>Initial questions and New Questions:</p>
 </blockquote>
 <ul>
-<li><p>At the beginning of our project, we intend to explore the relationship between review score , genre, actor, director and each of interested outcome, namely <strong>total gross, review scores (metacritic review score) and opening gross</strong>.</p></li>
-<li><p>As the project progressed, we found that some of factors may be a significant predictor, whereas different levels within that factor may not be statistically significant.</p></li>
+<li>At the beginning of our project, we intend to explore the relationship between review score, genre, actor, director and each of interested outcome, namely <strong>total gross, review scores (metacritic review score) and opening gross</strong> using linear Regression model.</li>
 </ul>
 <blockquote>
 <p>Data</p>
@@ -252,18 +247,8 @@ $(document).ready(function () {
 <li>Data Source:
 <ul>
 <li><a href="http://www.boxofficemojo.com/yearly/chart/?yr=2014&amp;view=releasedate&amp;view2=domestic&amp;sort=gross&amp;order=DESC&amp;&amp;p=.htm">Box office</a></li>
-<li><a href="https://www.kaggle.com/PromptCloudHQ/imdb-data">06-16 movie</a></li>
+<li><a href="https://www.kaggle.com/PromptCloudHQ/imdb-data">06-16 movie</a> &gt; Exploratory analyasis:</li>
 </ul></li>
-<li>Scapring process &amp; cleaning:
-<ul>
-<li>Firstly, we use the 06-16 movie dataset from kaggle and scrape the box office data from a <a href="(http://www.boxofficemojo.com/yearly/chart/?yr=2014&amp;view=releasedate&amp;view2=domestic&amp;sort=gross&amp;order=DESC&amp;&amp;p=.htm)">online source</a>.</li>
-<li>For the cleaning of the scraped data, we wrote a function to loop through urls that contains box office data from 2006 to 2016. We extracted the data table and formated in the way that could be combined and joined with our dataset from kaggle.</li>
-</ul></li>
-</ul>
-<blockquote>
-<p>Exploratory analyasis:</p>
-</blockquote>
-<ul>
 <li><p>We make plots for:</p>
 <ul>
 <li>Distribution of movie genre</li>
@@ -272,22 +257,11 @@ $(document).ready(function () {
 </ul></li>
 </ul>
 <blockquote>
-<p>Additional analysis:</p>
+<p>Summary of Analysis:</p>
 </blockquote>
 <ul>
 <li><p>We use lm function and anova function to test if the factor that we are tested is a statistical significant predictor of the interested outcome.</p></li>
-<li><p>If the predictor is contious, we will fit a linear regression line to the data; if the predictor is categorical and contains many levels, we will use plotly to display the difference among the levels of the predictor with regard to the interested outcome.</p></li>
-</ul>
-<blockquote>
-<p>Discussion</p>
-</blockquote>
-<ul>
-<li>For the total gross,
-<ul>
-<li>There is a linear relationship between total gross (outcome) and review score (predictor).</li>
-<li>Director is a significant predictor of total gross.</li>
-<li>Actor is not a significant predictor of total gross.</li>
-</ul></li>
+<li><p>If the predictor is continous, we will fit a linear regression line to the data; if the predictor is categorical and contains many levels, we will use ANOVA function to check if the variable of interest is actually significant predictor.</p></li>
 </ul>
 
 
