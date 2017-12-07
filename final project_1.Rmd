@@ -219,7 +219,8 @@ movie_with_boxoffice %>%
   plot_ly(., x = ~genre,  y = ~box_movie, color = ~genre, type = "bar") %>% 
    layout(title = 'Total Movie Box Office For Each Movie Type',
          xaxis = list(title =""),
-         yaxis = list(title ="total movie box office"))
+         yaxis = list(title ="total movie box office"),
+         margin = list(b = 160))
 ```
 
 **Comment**: From two plots and datatable above, we found out that,during 2006 to 2016, drama movie is the most common movie type, and adventure movie has the best total movie box, histroy moive has the best mean review score. 
@@ -256,7 +257,8 @@ movie_with_boxoffice %>%
   plot_ly(., x = ~studio,  y = ~box_movie, color = ~studio, type = "bar") %>% 
    layout(title = 'Total Movie Box Office For Each Studio',
          xaxis = list(title =""),
-         yaxis = list(title ="total movie box office"))
+         yaxis = list(title ="total movie box office"),
+         margin = list(b = 160))
 
 ```
 
