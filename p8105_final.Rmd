@@ -24,7 +24,7 @@ library(plotly)
 library(knitr)
 ```
 
-```{r data_prepare, warning=FALSE}
+```{r data_prepare, warning=FALSE, include=FALSE}
 # read IMDB data from Kaggle
 movie = read.csv("./data/IMDB-Movie-Data.csv")
 
