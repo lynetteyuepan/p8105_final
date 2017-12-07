@@ -101,7 +101,7 @@ movie_with_boxoffice = movie_with_boxoffice %>%
 
 ***
 
-##                                                      Relationship between total gross and review score
+## Relationship between total gross and review score
 ```{r, warning=FALSE, echo= FALSE}
 set.seed(1)
 
