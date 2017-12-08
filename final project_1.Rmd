@@ -42,16 +42,12 @@ movie_with_boxoffice %>%
   datatable(class = 'cell-border stripe')
 
 movie_with_boxoffice %>% 
-  group_by(movie_title) %>%
-  summarize(box_movie = sum(total_gross_millions,na.rm = TRUE)) %>% 
-  top_n(10) %>% 
-  arrange(desc(box_movie)) %>% 
-  mutate(move_title = fct_reorder(movie_title, box_movie)) %>% 
-  plot_ly(x = ~movie_title,  y = ~box_movie, color = ~movie_title, type = "bar") %>% 
-   layout(title = 'Total Movie Box Office For Each Movie',
-         xaxis = list(title =""),
-         yaxis = list(title ="total movie box office"),
-         margin = list(b = 160))
+  arrange(desc(total_gross_millions)) %>% 
+  head(10) %>%
+  mutate(movie_title = forcats::fct_reorder(movie_title, total_gross_millions)) %>% 
+  ggplot(aes(x = movie_title, y = total_gross_millions, fill=movie_title))+
+  geom_bar(stat = "identity")+
+  theme(axis.text.x = element_text(angle = 215, hjust = 1))
 ```
 
 ##Top ranked movies with best review_score
