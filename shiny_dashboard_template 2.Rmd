@@ -1,6 +1,7 @@
 
 ---
-title: "final project"
+title: "Movie explore"
+runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     theme: cosmo
@@ -8,31 +9,24 @@ output:
     vertical_layout: fill
     source_code: embed
 ---
-```{r results='hide', message=FALSE, warning=FALSE,echo=FALSE}
-library(dplyr)
+```{r global, include=FALSE}
+library(readr)
 library(tidyverse)
-library(httr)
-library(rvest)
+library(janitor)
 library(stringr)
 library(forcats)
 library(viridis)
-library(readr)
-library(tidytext)
-library(rvest)
-library(janitor)
-library(haven)
-library(DT)
 library(plotly)
-library(viridis)
 library(shiny)
-set.seed(1)
+library(flexdashboard)
+library(httr)
+library(rvest)
+library(viridis)
 ```
 
-
-```{r data_prepare, include=FALSE,warning=FALSE,echo=FALSE}
-
+```{r data_prepare, warning=FALSE}
 # read IMDB data from Kaggle
-movie = read.csv("IMDB-Movie-Data.csv")
+movie = read.csv("./data/IMDB-Movie-Data.csv")
 
 # read boxoffice data from internet
 url_base = "http://www.boxofficemojo.com/yearly/chart/?view=releasedate&view2=domestic&yr="
@@ -62,7 +56,7 @@ colnames(box_office_year)[6] = "opening"
 colnames(box_office_year)[7] = "theaters_opening"  
 
 box_office_year = box_office_year %>% 
-  select(movie_title, studio, total_gross, opening) %>% 
+  dplyr::select(movie_title, studio, total_gross, opening) %>% 
   .[3:102,] %>%
   mutate(year = 2005 + i)
     
@@ -102,63 +96,108 @@ movie_with_boxoffice = movie_with_boxoffice %>%
   separate(genre_sep, into = c("genre1", "genre2", "genre3"), sep = ",")
 ```
 
-Column {data-width=400}
+
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+ 
+```{r}
+
+# selectInput widget-boro
+year = movie_with_boxoffice %>% distinct(year) %>% pull()
+checkboxGroupInput("year", label = h3("Select year for bar plot"),
+            choices = year, selected = c("2016","2015","2014"))
+
+
+
+
+
+
+
+```
+
+
+Row
 -----------------------------------------------------------------------
 
-### donut plot
-
-This donut plot describes the distribution of genres of movies from 2006 to 2016. 
+### line plot
 
 ```{r}
-##plot that shows the number of restaurant in different boros
-movie_with_boxoffice %>% 
-  mutate(genre = as.character(genre)) %>% 
-  unnest_tokens(word, genre) %>% 
-  mutate(genre = word) %>% 
-  group_by(genre) %>%
-  summarize(n = n()) %>% 
-  filter(!genre=="fi") %>% 
-  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>% 
-  arrange(desc(n)) %>% 
-  plot_ly(labels = ~genre, values = ~n, textposition = 'inside',
-        textinfo = 'label+percent') %>%
-  add_pie(hole = 0.6) %>%
-  layout(title = "Distribution of different movie genre type",  showlegend = FALSE,
-         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) 
+##plot that shows number of row for each grade date
+renderPlotly({
+  movie_with_boxoffice %>%
+  group_by(year) %>% 
+  mutate(box_office_year = sum(total_gross_millions, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  filter(year == input$year) %>% 
+  plot_ly(x = ~year, y = ~box_office_year, type = 'bar' ,
+mode = 'markers' ) %>% 
+  layout(margin = list(b = 160))
+
+})
 ```
 
-Column {data-width=600}
+
+Row
 -----------------------------------------------------------------------
 
-### bar plot(This bar plot describes total box office for different genres of movie from 2006 to 2016. The x axis represents movie genres, and the y axis represents total box office (in millions).
-)
+### line plot
 
 ```{r}
-movie_with_boxoffice %>% 
-  group_by(studio) %>%
-  na.omit() %>% 
-  summarize(box_movie = sum(total_gross_millions,na.rm = TRUE)) %>% 
-  mutate(studio = fct_reorder(studio, box_movie)) %>% 
-  plot_ly(., x = ~studio,  y = ~box_movie, color = ~studio, type = "bar") %>% 
-   layout(title = 'Total Movie Box Office For Each Studio',
-         xaxis = list(title = ""),
-         yaxis = list(title ="total movie box office"))
+##plot that shows number of row for each grade date
+renderPlotly({
+  movie_with_boxoffice %>%
+  group_by(year) %>% 
+  mutate(open_box_office_year = sum(open_gross_millions, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  filter(year == input$year) %>% 
+  plot_ly(x = ~year, y = ~open_box_office_year, type = 'bar' ,
+mode = 'markers' ) %>% 
+  layout(margin = list(b = 160))
+
+})
 ```
 
-### bar plot (This bar plot describes total box office for different genres of movie from 2006 to 2016. The x axis represents movie genres, and the y axis represents total box office (in millions).)
+Row
+-----------------------------------------------------------------------
+
+### line plot
+
 ```{r}
-movie_with_boxoffice %>% 
-  mutate(genre = as.character(genre)) %>% 
-  tidytext::unnest_tokens(word, genre) %>% 
-  mutate(genre = word) %>% 
-  group_by(genre) %>%
-  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
-  filter(!genre=="fi") %>% 
-  mutate(genre = stringr::str_replace(genre, "sci", "sci-fi")) %>% 
-  mutate(genre = fct_reorder(genre, box_movie)) %>% 
-  plot_ly(., x = ~genre,  y = ~box_movie, color = ~genre, type = "bar") %>% 
-   layout(title = 'Total Movie Box Office For Each Movie Type',
-         xaxis = list(title = ""),
-         yaxis = list(title ="total movie box office"))
+##plot that shows number of row for each grade date
+renderPlotly({
+  movie_with_boxoffice %>%
+  group_by(year) %>% 
+  mutate(mean_review_year = mean(review_score, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  filter(year == input$year) %>% 
+  plot_ly(x = ~year, y = ~mean_review_year, type = 'bar' ,
+mode = 'markers' ) %>% 
+  layout(margin = list(b = 160))
+
+})
 ```
+
+Row
+-----------------------------------------------------------------------
+
+### line plot
+
+```{r}
+##plot that shows number of row for each grade date
+renderPlotly({
+  movie_with_boxoffice %>%
+  group_by(year) %>% 
+  mutate(mean_rating_year = mean(rating, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  filter(year == input$year) %>% 
+  plot_ly(x = ~year, y = ~mean_rating_year, type = 'bar' ,
+mode = 'markers' ) %>% 
+  layout(margin = list(b = 160))
+
+})
+
+```
+
+Row
+-----------------------------------------------------------------------
