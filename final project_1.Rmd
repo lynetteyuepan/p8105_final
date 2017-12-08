@@ -33,7 +33,7 @@ movie_with_boxoffice = read.csv("./data/IMDB-Movie-Data_new.csv")
 
 ##Top ranked movies with best box-office 
 
-```{r warning=FALSE, echo=FALSE}
+```{r warning=FALSE, message=FALSE}
 ##Top ranked movies with best box-office 
 movie_with_boxoffice %>% 
   group_by(movie_title) %>% 
@@ -102,7 +102,7 @@ movie_with_boxoffice %>%
 
 ##Director:  The top ranked director with best box-office
 
-```{r warning=FALSE}
+```{r warning=FALSE, message=FALSE}
 ##Director:  The top ranked director with best box-office
 movie_with_boxoffice %>% 
   group_by(director) %>% 
@@ -115,7 +115,7 @@ movie_with_boxoffice %>%
   summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
   top_n(10) %>% 
   mutate(director = fct_reorder(director, box_movie)) %>% 
-  plot_ly(., x = ~director,  y = ~box_movie, color = ~director, type = "bar") %>%
+  plot_ly(., x = ~director,  y = ~box_movie, color = ~factor(director), type = "bar") %>%
    layout(title = ' The top 10 director with best box-office',
          xaxis = list(title =""),
          yaxis = list(title ="total movie box office"),
@@ -181,7 +181,7 @@ movie_with_boxoffice %>%
 
 ###Actor/Actress:  The top ranked actor/actress with best box-office
 
-```{r warning=FALSE}
+```{r warning=FALSE, message=FALSE}
 ##Actor/Actress:  The top ranked actor/actress with best box-office
 movie_with_boxoffice %>% 
   gather(key = actor, value = main_actor, actor1:actor4) %>% 
