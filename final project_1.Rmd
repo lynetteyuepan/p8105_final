@@ -45,9 +45,10 @@ movie_with_boxoffice %>%
   arrange(desc(total_gross_millions)) %>% 
   head(10) %>%
   mutate(movie_title = forcats::fct_reorder(movie_title, total_gross_millions)) %>% 
-  ggplot(aes(x = movie_title, y = total_gross_millions, fill=movie_title))+
-  geom_bar(stat = "identity")+
-  theme(axis.text.x = element_text(angle = 215, hjust = 1))
+  plot_ly(., x = ~movie_title,  y = ~total_gross_millions, color = ~factor(movie_title), type = "bar") %>% 
+  layout(xaxis = list(title=""),
+         yaxis=list(title="Total movie box office"),
+         showlegend = FALSE, margin=list(b=160))
 ```
 
 ##Top ranked movies with best review_score
