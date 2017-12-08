@@ -166,8 +166,12 @@ lm(total_gross_millions ~ genre, data = movie_boxoffice_genre) %>%
 ```{r,  warning=FALSE}
 # visualize the relationship between total gross and genre
 movie_boxoffice_genre %>% 
+  group_by(genre) %>% 
+  mutate(mean_total_gross_millions = mean(total_gross_millions)) %>% 
+  ungroup() %>%  
+  mutate(genre = forcats::fct_reorder(genre, mean_total_gross_millions)) %>% 
   plotly::plot_ly(., x= ~factor(genre), y = ~total_gross_millions, color = ~genre, type = "box") %>% 
-  layout(xaxis = list(title=" "), yaxis = list(title="total gross in millions"), title = "Boxplot showing the total gross of movies associated with each genre")
+  layout(xaxis = list(title=" "), yaxis = list(title="total gross in millions"), title = "Boxplot showing the total gross of movies associated with each genre", margin = list(b = 160))
 
 
 ```
@@ -201,8 +205,17 @@ lm(total_gross_millions ~ director, data = movie_with_boxoffice) %>%
 # visualize the relationship between total gross and director
 
 movie_with_boxoffice %>% 
+  .[!duplicated(.[5]), ] %>% 
+  mutate(director = forcats::fct_reorder(director, total_gross_millions)) %>%
+  plot_ly(x = ~director,  y = ~total_gross_millions, color = ~director, type = "bar") %>% 
+  layout(xaxis = list(title=" "), yaxis = list(title="total gross in millions"), title = "Total gross of movies of each director who makes one movie", showlegend = FALSE, margin = list(b = 160))
+
+
+movie_with_boxoffice %>% 
+  .[duplicated(.[5]), ] %>% 
+  mutate(director = forcats::fct_reorder(director, total_gross_millions)) %>%
   plot_ly(x = ~director,  y = ~total_gross_millions, color = ~director, type = "box") %>% 
-  layout(xaxis = list(title=" "), yaxis = list(title="total gross in millions"), title = "Boxplot showing the total gross of movies associated with each director", showlegend = FALSE)
+  layout(xaxis = list(title=" "), yaxis = list(title="total gross in millions"), title = "Total gross of movies of each director who makes more than one movie", showlegend = FALSE, margin = list(b = 160))
 
 ```
 
@@ -219,7 +232,8 @@ set.seed(1)
 # separate the actors in actor column into four columns; then use gather function in order to do the anova test.
 total_gross_actor_sep= 
   movie_with_boxoffice %>%
-  gather(., key = "num_actor", value = "main_actors", actor1:actor4) 
+  filter(!is.na(total_gross_millions)) %>% 
+  gather(., key = "num_actor", value = "main_actors", actor1:actor4)
 
 # check if actor/actress is a significant predictor
 anova(lm(total_gross_millions ~ main_actors, data = total_gross_actor_sep)) %>% 
@@ -233,12 +247,21 @@ anova(lm(total_gross_millions ~ main_actors, data = total_gross_actor_sep)) %>%
 # visualize the relationship between total gross and actors/actresses:
 
 total_gross_actor_sep %>% 
-  plot_ly(y = ~main_actors,  x = ~total_gross_millions, color = ~main_actors, type = "box") %>% 
-  layout(yaxis = list(title=" "), xaxis = list(title="total gross in millions"), title = "Boxplot showing the total gross of movies associated with each actors/actresses", showlegend = FALSE)
+  filter(year<=2011) %>%
+  mutate(main_actors = forcats::fct_reorder(main_actors, total_gross_millions)) %>%
+  plot_ly(x = ~main_actors,  y = ~total_gross_millions, color = ~main_actors, type = "box") %>% 
+  layout(xaxis = list(title="Actors"), yaxis = list(title="total gross in millions"), title = "Total gross of movies (2006-2011) for each actors/actresses ", showlegend = FALSE, margin = list(b = 160))
+
+
+total_gross_actor_sep %>% 
+  filter(year>2011) %>%
+  mutate(main_actors = forcats::fct_reorder(main_actors, total_gross_millions)) %>% 
+  plot_ly(x = ~main_actors,  y = ~total_gross_millions, color = ~main_actors, type = "box") %>% 
+  layout(xaxis = list(title="Actors"), yaxis = list(title="total gross in millions"), title = "Total gross of movies (2011-2016) for each actors/actresses", showlegend = FALSE, margin = list(b = 160))
 
 ```
 
-**Comment:** Then we can visualize the total gross for each actor/actress using boxplot and see if any actors/actresses are associated with significant higher box office. Interestingly, I found that although some actors/actresses are not only associated with significant higher box office but also low box office. The bands of box plot for majority actors/actresses are large, which indicates there is no any actor/actress that can directly associate with the box office of a movie by himself/herself.
+**Comment:** I separated the boxplot showing the total gross of movies for each actor/actrsses based on years and see if any actors/actresses are associated with significant higher box office. Interestingly, I found that although some actors/actresses are not only associated with significant higher box office but also low box office. The bands of box plot for majority actors/actresses are large, which indicates there is no any actor/actress that can directly associate with the box office of a movie by himself/herself. These two graphs also show us how the box office change with regard to the cast members.
 
 
 

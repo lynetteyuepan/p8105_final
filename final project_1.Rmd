@@ -107,6 +107,18 @@ movie_with_boxoffice %>%
   summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
   datatable(class = 'cell-border stripe')
+
+movie_with_boxoffice %>% 
+  group_by(movie_title) %>%
+  summarize(box_movie = sum(total_gross_millions,na.rm = TRUE)) %>% 
+  top_n(10) %>% 
+  arrange(desc(box_movie)) %>% 
+  mutate(move_title = fct_reorder(movie_title, box_movie)) %>% 
+  plot_ly(x = ~movie_title,  y = ~box_movie, color = ~movie_title, type = "bar") %>% 
+   layout(title = 'Total Movie Box Office For Each Movie',
+         xaxis = list(title =""),
+         yaxis = list(title ="total movie box office"),
+         margin = list(b = 160))
 ```
 
 ##Top ranked movies with best review_score
@@ -142,8 +154,6 @@ movie_with_boxoffice %>%
   datatable(class = 'cell-border stripe')
 ```
 
-
-
 ##Top ranked movies with longest runtime 
 
 ```{r warning=FALSE}
@@ -166,6 +176,17 @@ movie_with_boxoffice %>%
   summarize(box_movie = sum(total_gross_millions, na.rm = TRUE), mean_review = mean(review_score, na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
   datatable(class = 'cell-border stripe')
+
+movie_with_boxoffice %>% 
+  group_by(director) %>% 
+  summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
+  top_n(10) %>% 
+  mutate(director = fct_reorder(director, box_movie)) %>% 
+  plot_ly(., x = ~director,  y = ~box_movie, color = ~director, type = "bar") %>%
+   layout(title = ' The top 10 director with best box-office',
+         xaxis = list(title =""),
+         yaxis = list(title ="total movie box office"),
+         margin = list(b = 160))
 ```
 
 ##Genre of movie
@@ -235,6 +256,18 @@ movie_with_boxoffice %>%
   summarize(box_movie = sum(total_gross_millions, na.rm = TRUE)) %>% 
   arrange(desc(box_movie)) %>% 
   datatable(class = 'cell-border stripe')
+
+movie_with_boxoffice %>% 
+  gather(key = actor, value = main_actor, actor1:actor4) %>% 
+  group_by(main_actor) %>% 
+  summarize(box_movie = sum(total_gross_millions,na.rm = TRUE)) %>% 
+  top_n(10) %>% 
+  mutate(main_actor = fct_reorder(main_actor, box_movie)) %>% 
+  plot_ly(., x = ~main_actor,  y = ~box_movie, color = ~main_actor, type = "bar") %>%
+   layout(title = ' The top 10 actor/actress with best box-office',
+         xaxis = list(title =""),
+         yaxis = list(title ="total movie box office"),
+         margin = list(b = 160))
 ```
 
 
