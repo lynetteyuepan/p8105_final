@@ -363,56 +363,92 @@ div.tocify {
 <li><strong>Data cleaning and scraping:</strong>
 <ul>
 <li>Firstly, we wrote a for-loop to scape the box office dataset from the online source which includes movies with total box office that ranked top 100 in each year from 2006 to 2016. After we changed the names of box office dataset for consistency, we joined the box office dataset with the movie dataset obtained from kaggle by the movie names.</li>
-<li>Next, we cleaned our combined dataset. We decided to keep the total gross column and replaced NA in total gross with the values in Revenue column in movie dataset. Also, we divided the total gross by 10^6 to reduce the number of zeros in that column. Furthermore, we separated the actor column into four new columns for later analysis purpose. And then separate the genre into three columns for later data analysis (code is available if unveiling the code chunk).</li>
+<li>Next, we cleaned our combined dataset. We decided to keep the total gross column and replaced NA in total gross with the values in Revenue column in movie dataset. Also, we divided the total gross by 10^6 to reduce the number of zeros in that column. Furthermore, we separated the actor column into four new columns for later analysis purpose. And then separate the genre into three columns for later data analysis (Unveiling to see the code).</li>
 </ul></li>
 </ul>
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.4.2</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre><code>## Loading tidyverse: ggplot2
-## Loading tidyverse: tibble
-## Loading tidyverse: tidyr
-## Loading tidyverse: readr
-## Loading tidyverse: purrr</code></pre>
-<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
-<pre><code>## filter(): dplyr, stats
-## lag():    dplyr, stats</code></pre>
-<pre><code>## Loading required package: xml2</code></pre>
-<pre><code>## 
-## Attaching package: &#39;rvest&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:purrr&#39;:
-## 
-##     pluck</code></pre>
-<pre><code>## The following object is masked from &#39;package:readr&#39;:
-## 
-##     guess_encoding</code></pre>
-<pre><code>## Loading required package: viridisLite</code></pre>
-<pre><code>## Warning: package &#39;tidytext&#39; was built under R version 3.4.2</code></pre>
-<pre><code>## 
-## Attaching package: &#39;plotly&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:httr&#39;:
-## 
-##     config</code></pre>
-<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
-## 
-##     last_plot</code></pre>
-<pre><code>## The following object is masked from &#39;package:stats&#39;:
-## 
-##     filter</code></pre>
-<pre><code>## The following object is masked from &#39;package:graphics&#39;:
-## 
-##     layout</code></pre>
-<pre><code>## Warning: Column `movie_title` joining factor and character vector, coercing
-## into character vector</code></pre>
-<pre><code>## Warning: Too few values at 1 locations: 623</code></pre>
-<pre><code>## Warning: Too few values at 340 locations: 3, 8, 18, 19, 22, 26, 28, 29, 31,
-## 32, 40, 42, 43, 45, 47, 50, 53, 58, 60, 69, ...</code></pre>
+<pre class="r"><code>library(dplyr)
+library(tidyverse)
+library(httr)
+library(rvest)
+library(stringr)
+library(forcats)
+library(viridis)
+library(readr)
+library(tidytext)
+library(rvest)
+library(janitor)
+library(haven)
+library(DT)
+library(plotly)
+# read IMDB data from Kaggle
+movie = read.csv(&quot;./data/IMDB-Movie-Data.csv&quot;)
+
+# read boxoffice data from internet
+url_base = &quot;http://www.boxofficemojo.com/yearly/chart/?view=releasedate&amp;view2=domestic&amp;yr=&quot;
+
+# create url strings for 2006 - 2016 boxoffice data; only include movies with top 100 total gross in each year. 
+urls = str_c(url_base, 2006:2016, &quot;&amp;sort=gross&amp;order=DESC&amp;p=.htm&quot;)
+output = vector(&quot;list&quot;, 11)
+
+# create for loop to generate the 2006 - 2016 boxoffice dataframe
+boxoffice = NULL
+for (i in 1:11) {
+
+output[[i]] = read_html(urls[[i]])
+
+output[[i]] %&gt;% 
+html_nodes(css = &quot;table&quot;)
+
+box_office_year = (output[[i]] %&gt;% html_nodes(css = &quot;table&quot;))[[7]] %&gt;%
+  html_table(fill = TRUE) 
+  
+colnames(box_office_year) = box_office_year[1,]
+colnames(box_office_year)[2] = &quot;movie_title&quot;
+colnames(box_office_year)[3] = &quot;studio&quot;
+colnames(box_office_year)[4] = &quot;total_gross&quot;
+colnames(box_office_year)[5] = &quot;theaters&quot;
+colnames(box_office_year)[6] = &quot;opening&quot;
+colnames(box_office_year)[7] = &quot;theaters_opening&quot;  
+
+box_office_year = box_office_year %&gt;% 
+  dplyr::select(movie_title, studio, total_gross, opening) %&gt;% 
+  .[3:102,] %&gt;%
+  mutate(year = 2005 + i)
+    
+boxoffice = bind_rows(boxoffice, box_office_year)  
+}
+
+set.seed(1)
+# renmae the movie_title in movie dataset in order to join two datasets
+movie_rename= movie %&gt;% 
+  clean_names() %&gt;% 
+  rename(&quot;movie_title&quot; = &quot;title&quot;,
+         &quot;review_score&quot; = &quot;metascore&quot;)
+
+# joining two datasets; tidy data set
+movie_with_boxoffice = left_join(movie_rename, boxoffice, by=c(&quot;movie_title&quot;, &quot;year&quot;)) %&gt;% 
+  rename(&quot;open_gross&quot; = &quot;opening&quot;)  
+
+# Replace NA values in total_gross with the revenue column in movie dataset
+total_gross_na = is.na(movie_with_boxoffice$total_gross)
+
+movie_with_boxoffice$total_gross[total_gross_na] =  movie_with_boxoffice$revenue_millions[total_gross_na]*10^6
+
+# eliminate $sign and &quot;,&quot; of the total gross and open gross, remove rows with review scores is NA:
+movie_with_boxoffice = movie_with_boxoffice %&gt;% 
+  mutate(total_gross = gsub(&quot;\\$&quot;, &quot;&quot;, total_gross),
+         total_gross = gsub(&quot;,&quot;, &quot;&quot;, total_gross),
+         total_gross = as.numeric(total_gross),
+         open_gross = gsub(&quot;\\$&quot;, &quot;&quot;, open_gross),
+         open_gross = gsub(&quot;,&quot;, &quot;&quot;, open_gross),
+         open_gross = as.numeric(open_gross)) %&gt;% 
+  mutate(total_gross_millions = total_gross / 10^6,
+         open_gross_millions = open_gross / 10^6,
+         actors_sep = actors,
+         genre_sep = genre) %&gt;% 
+  select(-total_gross, -revenue_millions, -open_gross) %&gt;% 
+  separate(., actors_sep, c(&quot;actor1&quot;,&quot;actor2&quot;, &quot;actor3&quot;, &quot;actor4&quot;), sep=&quot;,&quot;) %&gt;% 
+  separate(genre_sep, into = c(&quot;genre1&quot;, &quot;genre2&quot;, &quot;genre3&quot;), sep = &quot;,&quot;)</code></pre>
 <ul>
 <li><strong>Statistical analysis:</strong>
 <ul>
