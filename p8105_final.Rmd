@@ -34,8 +34,6 @@ movie_with_boxoffice = read.csv("./data/IMDB-Movie-Data_new.csv")
 
 ## Relationship between total gross and review score
 ```{r, warning=FALSE, echo= FALSE}
-set.seed(1)
-
 movie_with_boxoffice= movie_with_boxoffice %>% 
     filter(!is.na(total_gross_millions))
 
@@ -115,7 +113,6 @@ movie_boxoffice_genre %>%
 ## Relationship between total gross and director
 
 ```{r, warning=FALSE, fig.align='center'}
-set.seed(1)
 
 # check if director is a significant predictor
 anova(lm(total_gross_millions ~ director, data = movie_with_boxoffice)) %>% 
@@ -142,9 +139,12 @@ movie_with_boxoffice %>%
   layout(xaxis = list(title=" "), yaxis = list(title="total gross in millions"), title = "Total gross of movies of each director who makes one movie", showlegend = FALSE, margin = list(b = 160))
 
 
-movie_with_boxoffice %>% 
+movie_with_boxoffice %>%
   .[duplicated(.[5]), ] %>% 
-  mutate(director = forcats::fct_reorder(director, total_gross_millions)) %>%
+  group_by(director) %>% 
+  mutate(mean_total_gross_director = mean(total_gross_millions)) %>% 
+  ungroup() %>% 
+  mutate(director = forcats::fct_reorder(director, mean_total_gross_director)) %>%
   plot_ly(x = ~director,  y = ~total_gross_millions, color = ~director, type = "box") %>% 
   layout(xaxis = list(title=" "), yaxis = list(title="total gross in millions"), title = "Total gross of movies of each director who makes more than one movie", showlegend = FALSE, margin = list(b = 160))
 
