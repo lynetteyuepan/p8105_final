@@ -91,6 +91,7 @@ From the linear regression given above, we can see that the$\beta_{1}$'s p-value
 movie_with_boxoffice %>%
   arrange(desc(review_score)) %>% 
   dplyr::select(movie_title, review_score, open_gross_millions) %>% 
+  na.omit() %>% 
   head(10) %>% 
   datatable(class = 'cell-border stripe')
 ```
@@ -103,6 +104,7 @@ So will the worst 10 review score movies contain top 10 opening gross movies?
 movie_with_boxoffice %>%
   arrange(review_score) %>% 
   dplyr::select(movie_title, review_score, open_gross_millions) %>% 
+  na.omit() %>% 
   head(10) %>% 
   datatable(class = 'cell-border stripe')
 ```
@@ -174,6 +176,7 @@ There seems to be 10 outliers in y.
 movie_with_boxoffice %>%
   arrange(desc(rating)) %>% 
   dplyr::select(movie_title, rating, open_gross_millions) %>% 
+  na.omit() %>% 
   head(10) %>% 
   datatable(class = 'cell-border stripe')
 ```
@@ -185,6 +188,7 @@ So will the worst 10 rating movies contain top 10 opening gross movies?
 movie_with_boxoffice %>%
   arrange(rating) %>% 
   dplyr::select(movie_title, rating, open_gross_millions) %>% 
+  na.omit() %>% 
   head(10) %>% 
   datatable(class = 'cell-border stripe')
 ```
@@ -243,7 +247,7 @@ lm(open_gross_millions ~ genre, data = movie_with_boxoffice_genre_sep) %>%
   filter(p.value < 0.05) %>% 
   datatable(class = 'cell-border stripe')
 ```
-I choose the p.valur < 0.05 to find the significant genre for predicting open-gross.
+I choose the p.value < 0.05 to find the significant genre for predicting open-gross.
 
 ```{r, warning=FALSE}
   
@@ -312,8 +316,11 @@ lm(open_gross_millions ~ director, data = movie_with_boxoffice) %>%
 ```
 
 ```{r, warning=FALSE}
-# visualize the relationship between total gross and 
-plot_ly(movie_with_boxoffice, labels = ~director, values = ~open_gross_millions, type = 'pie',
+# visualize the relationship between open gross and director
+movie_with_boxoffice %>% 
+  group_by(director) %>% 
+  filter(open_gross_millions > 100) %>% 
+  plot_ly(labels = ~director, values = ~open_gross_millions, type = 'pie',
         textposition = 'inside',
         textinfo = 'label+percent',
         insidetextfont = list(color = '#FFFFFF'),
@@ -326,17 +333,10 @@ plot_ly(movie_with_boxoffice, labels = ~director, values = ~open_gross_millions,
   layout(title = 'Opening gross from 2006:2016',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-
-
-movie_with_boxoffice %>% 
-  plot_ly(x = ~director,  y = ~open_gross_millions, color = ~director, type = "bar") %>% 
-  layout(showlegend = FALSE) %>%
-  layout(margin = list(b = 160))
-  
-
-
 ```
-We can see that Colin Trevorrow contributes the most open gross, not Ridley Scott.
+From the pie graph given above, we can see that Colin Trevorrow contributes most opening gross for 8.07% of total opening gross. 
+
+
 
 
 ## Relationship between open gross and actor
@@ -394,6 +394,8 @@ movie_with_boxoffice %>%
   stat_smooth(method = "lm") 
 
 ```
+
+
 From the scatterplot we can clearly see that, there seems to be a strong linear association between open gross and total gross
 
 ```{r, warning=FALSE}
@@ -441,34 +443,4 @@ best_fit %>%
 ```
 From the tables given above, we select the smallest bic value, which is model with 3 predictors with bic  -660.3094(review score, rating, total gross millions). The regression model is open_gross = 36.44 -0.23review_score - 3.49rating + 0.30total_gross_millions
 
-```{r}
-par(mfrow = c(2,2))
-movie_with_boxoffice %>%
-  group_by(year) %>% 
-  mutate(box_office_year = sum(total_gross_millions, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  plot_ly(x = ~year, y = ~box_office_year, type = 'bar' ) %>% 
-  layout(margin = list(b = 160))
 
-
-movie_with_boxoffice %>%
-  group_by(year) %>% 
-  mutate(open_box_office_year = sum(open_gross_millions, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  plot_ly(x = ~year, y = ~open_box_office_year, type = 'bar'  ) %>% 
-  layout(margin = list(b = 160))
-
-movie_with_boxoffice %>%
-  group_by(year) %>% 
-  mutate(mean_review_year = mean(review_score, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  plot_ly(x = ~year, y = ~mean_review_year, type = 'bar'  ) %>% 
-  layout(margin = list(b = 160))
-
- movie_with_boxoffice %>%
-  group_by(year) %>% 
-  mutate(mean_rating_year = mean(rating, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  plot_ly(x = ~year, y = ~mean_rating_year, type = 'bar'  ) %>% 
-  layout(margin = list(b = 160))
-```
