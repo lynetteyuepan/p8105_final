@@ -295,8 +295,9 @@ lm(total_gross_millions ~ studio, data = movie_total_gross_studio) %>%
 # visualize the relationship between total gross and production company
 
 movie_total_gross_studio %>% 
+  mutate(studio = forcats::fct_reorder(studio, total_gross_millions)) %>% 
   plot_ly(x = ~studio,  y = ~total_gross_millions, color = ~studio, type = "box") %>% 
-  layout(xaxis = list(title="Production company"), yaxis = list(title="total gross in millions"), title = "Boxplot showing the total gross of movies associated with each production company")
+  layout(xaxis = list(title="Production company"), yaxis = list(title="total gross in millions"), title = "Boxplot showing the total gross of movies associated with each production company", margin = list(b = 160))
 ```
 **Comment:** Then the box plot of the total gross for each production company shows us some production companies' mean total movie sales are significantly higher compared to that of the other studios. For example, Sony has substantially higher mean total movie sales than than of SPC. 
 
