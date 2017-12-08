@@ -7,7 +7,22 @@ output:
     toc: true
     toc_float: true
 ---
-
+```{r include=FALSE, warning=FALSE}
+library(dplyr)
+library(tidyverse)
+library(httr)
+library(rvest)
+library(stringr)
+library(forcats)
+library(viridis)
+library(readr)
+library(tidytext)
+library(rvest)
+library(janitor)
+library(haven)
+library(DT)
+library(plotly)
+```
 
 ## Introduction: 
 
@@ -109,3 +124,40 @@ Movies have become a big part of everyday life worldwide and their popularity gr
 *  Director with really high box office doesn’t always means that he directed good movies. Michael Bay, for example, ranked as 4th director with best box-office, whereas the mean review score of his movies is only 43.8, which is lowest among top 10 director with best box office.
 
 *  The two sets of Dark Knites seems to be very successful, because they both ranked top 10 in the opening gross. What's more, they are both directed by Christopher Nolan. He is indeed a good director.
+
+```{r}
+par(mfrow = c(2,2))
+movie_with_boxoffice %>%
+  group_by(year) %>% 
+  mutate(box_office_year = sum(total_gross_millions, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  plot_ly(x = ~year, y = ~box_office_year, type = 'bar' ,
+mode = 'markers' ) %>% 
+  layout(margin = list(b = 160))
+
+
+movie_with_boxoffice %>%
+  group_by(year) %>% 
+  mutate(open_box_office_year = sum(open_gross_millions, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  plot_ly(x = ~year, y = ~open_box_office_year, type = 'bar' ,
+mode = 'markers' ) %>% 
+  layout(margin = list(b = 160))
+
+movie_with_boxoffice %>%
+  group_by(year) %>% 
+  mutate(mean_review_year = mean(review_score, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  plot_ly(x = ~year, y = ~mean_review_year, type = 'bar' ,
+mode = 'markers' ) %>% 
+  layout(margin = list(b = 160))
+
+ movie_with_boxoffice %>%
+  group_by(year) %>% 
+  mutate(mean_rating_year = mean(rating, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  plot_ly(x = ~year, y = ~mean_rating_year, type = 'bar' ,
+mode = 'markers' ) %>% 
+  layout(margin = list(b = 160))
+```
+
