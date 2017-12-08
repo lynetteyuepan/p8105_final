@@ -79,6 +79,7 @@ wordcloud(words = d$word, freq = d$freq, min.freq = 1,
 * Data Source:
     + [Box office](http://www.boxofficemojo.com/yearly/chart/?yr=2014&view=releasedate&view2=domestic&sort=gross&order=DESC&&p=.htm) 
     + [06-16 movie](https://www.kaggle.com/PromptCloudHQ/imdb-data)
+    
 > Exploratory analyasis:
 
 * We make plots for: 
