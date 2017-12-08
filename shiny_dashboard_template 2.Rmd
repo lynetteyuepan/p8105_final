@@ -201,3 +201,5 @@ mode = 'markers' ) %>%
 
 Row
 -----------------------------------------------------------------------
+
+From the four bar plots above, we can see that there is a increasing trend of total movie box office and total movie open box office from 2006 to 2016, indicating more and more people are willing to go to theater and watch movie. However, the mean review score and the mean rating of movies decreased from 2006 to 2016, indicating that even though the box office of moive is getting better, the overall quality and reputation of moives doesn't catch up. 
