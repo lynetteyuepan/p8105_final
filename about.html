@@ -11,7 +11,6 @@
 
 <meta name="author" content="Lynette, Jingxuan, Manqi, Yixi" />
 
-<meta name="date" content="2017-12-06" />
 
 <title>About</title>
 
@@ -25,6 +24,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
@@ -163,6 +163,14 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 
 
@@ -286,7 +294,7 @@ div.tocify {
   <a href="about.html">Report</a>
 </li>
 <li>
-  <a href="final_project_1.html">Visualization</a>
+  <a href="final_project_1.html">EDA</a>
 </li>
 <li>
   <a href="p8105_final.html">Total Gross</a>
@@ -296,6 +304,18 @@ div.tocify {
 </li>
 <li>
   <a href="p8105_final_mc4433.html">Opening gross</a>
+</li>
+<li>
+  <a href="https://caimanqi.shinyapps.io/shiny_dashboard_template/">
+    <span class="fa fa-bar-chart fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/lynetteyuepan/p8105_final">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -307,11 +327,18 @@ div.tocify {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">About</h1>
 <h4 class="author"><em>Lynette, Jingxuan, Manqi, Yixi</em></h4>
-<h4 class="date"><em>12/06/2017</em></h4>
 
 </div>
 
@@ -336,8 +363,57 @@ div.tocify {
 <li><strong>Data cleaning and scraping:</strong>
 <ul>
 <li>Firstly, we wrote a for-loop to scape the box office dataset from the online source which includes movies with total box office that ranked top 100 in each year from 2006 to 2016. After we changed the names of box office dataset for consistency, we joined the box office dataset with the movie dataset obtained from kaggle by the movie names.</li>
-<li>Next, we cleaned our combined dataset. We decided to keep the total gross column and replaced NA in total gross with the values in Revenue column in movie dataset. Also, we divided the total gross by 10^6 to reduce the number of zeros in that column. Furthermore, we separated the actor column into four new columns for later analysis purpose. And then separate the genre into three columns for later data analysis.</li>
+<li>Next, we cleaned our combined dataset. We decided to keep the total gross column and replaced NA in total gross with the values in Revenue column in movie dataset. Also, we divided the total gross by 10^6 to reduce the number of zeros in that column. Furthermore, we separated the actor column into four new columns for later analysis purpose. And then separate the genre into three columns for later data analysis (code is available if unveiling the code chunk).</li>
 </ul></li>
+</ul>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.4.2</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre><code>## Loading tidyverse: ggplot2
+## Loading tidyverse: tibble
+## Loading tidyverse: tidyr
+## Loading tidyverse: readr
+## Loading tidyverse: purrr</code></pre>
+<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
+<pre><code>## filter(): dplyr, stats
+## lag():    dplyr, stats</code></pre>
+<pre><code>## Loading required package: xml2</code></pre>
+<pre><code>## 
+## Attaching package: &#39;rvest&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     pluck</code></pre>
+<pre><code>## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding</code></pre>
+<pre><code>## Loading required package: viridisLite</code></pre>
+<pre><code>## Warning: package &#39;tidytext&#39; was built under R version 3.4.2</code></pre>
+<pre><code>## 
+## Attaching package: &#39;plotly&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:httr&#39;:
+## 
+##     config</code></pre>
+<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     last_plot</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter</code></pre>
+<pre><code>## The following object is masked from &#39;package:graphics&#39;:
+## 
+##     layout</code></pre>
+<pre><code>## Warning: Column `movie_title` joining factor and character vector, coercing
+## into character vector</code></pre>
+<pre><code>## Warning: Too few values at 1 locations: 623</code></pre>
+<pre><code>## Warning: Too few values at 340 locations: 3, 8, 18, 19, 22, 26, 28, 29, 31,
+## 32, 40, 42, 43, 45, 47, 50, 53, 58, 60, 69, ...</code></pre>
+<ul>
 <li><strong>Statistical analysis:</strong>
 <ul>
 <li>In this project, we mainly interested in analyzing the relationship between explanatory variable and outcome using linear regression model, specifically simple linear regression. Specifically, we hypothesized that there is a linear relationship between th explanatory variable(s) and outcome. Simple linear regression is a statistical method that allows us to summarize and study relationships between two variables. Multiple linear regression is also one type of linear regression model and contains more than one explanatory variables. Both simple linear regression and multiple linear regression are used to explore the relationship between predictor variable(s) and the interested outcome.</li>
@@ -407,6 +483,7 @@ div.tocify {
 <li><p>It is surprising that top film studios like Warner Bros and Universal Studio have are negatively associated with review score, which means if the film is made by these film, it may have a lower review score! The reason behind this phenomenon may be top studios produce hundreds of movie each year and not all of them got good reputaion, which lower the eastimate of review scores.</p></li>
 <li><p>Director with really high box office doesn’t always means that he directed good movies. Michael Bay, for example, ranked as 4th director with best box-office, whereas the mean review score of his movies is only 43.8, which is lowest among top 10 director with best box office.</p></li>
 <li><p>The two sets of Dark Knites seems to be very successful, because they both ranked top 10 in the opening gross. What’s more, they are both directed by Christopher Nolan. He is indeed a good director.</p></li>
+<li><p>We have some fun findings about movies’ parameters according to years. We create a shiny.app for displaying these results, and the link is <a href="https://caimanqi.shinyapps.io/shiny_dashboard_template/">here</a></p></li>
 </ul>
 </div>
 

@@ -53,6 +53,8 @@ wordcloud(words = d$word, freq = d$freq, min.freq = 1,
 ```
 
 
+<center> <h1>**[Screen Cast](https://voicethread.com/share/10083144/)**</h1> </center>
+
 
 
 * This website contains the final project for [Jeff Goldsmith's Data Science I class](http://jeffgoldsmith.com/DSI/index.html) in the Department of Biostatistics at Columbia University. 
@@ -61,10 +63,10 @@ wordcloud(words = d$word, freq = d$freq, min.freq = 1,
 
 > Group Members: 
 
-  * Yue(Lynette) Pan (yp2463) 1
-  * Yixi Xu (yx2450) 2
-  * Manqi Cai (mc4433) 3
-  * Jingxuan He (jh3909) 4
+  * Yue(Lynette) Pan (yp2463)
+  * Yixi Xu (yx2450)
+  * Manqi Cai (mc4433)
+  * Jingxuan He (jh3909)
   
 >  Overview of the project goals and motivation.:
 
